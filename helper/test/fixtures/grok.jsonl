@@ -1,0 +1,5 @@
+{"type":"thought","data":"Analyzing the directory structure..."}
+{"type":"text","data":"Here's"}
+{"type":"text","data":" a summary"}
+{"type":"tool_call","toolCallId":"call_1","toolName":"read_file","status":"in_progress"}
+{"type":"end","stopReason":"end_turn","sessionId":"abc123","requestId":"xyz789"}

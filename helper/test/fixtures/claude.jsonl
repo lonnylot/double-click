@@ -1,0 +1,5 @@
+{"type":"system","subtype":"init","session_id":"sess_123"}
+{"type":"stream_event","event":{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}},"session_id":"sess_123"}
+{"type":"stream_event","event":{"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":" there"}},"session_id":"sess_123"}
+{"type":"assistant","message":{"content":[{"type":"text","text":"Hello there"}]},"session_id":"sess_123"}
+{"type":"result","subtype":"success","is_error":false,"result":"Hello there","session_id":"sess_123"}
