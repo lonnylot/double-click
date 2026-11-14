@@ -22,7 +22,8 @@ test('the product name is user-facing and the host id and extension key stay put
   assert.equal(EXPECTED_EXTENSION_ID, 'dkaimfjbcdiaeialfejfhppmlmcafabc');
   const manifest = JSON.parse(read('extension/manifest.json'));
   assert.equal(manifest.name, 'Double Click AI');
-  assert.equal(manifest.short_name, 'Double Click AI');
+  assert.equal(manifest.short_name, 'DC AI');
+  assert.ok([...manifest.short_name].length <= 12);
   assert.equal(manifest.key, KNOWN_KEY);
   assert.equal(extensionIdFromKey(manifest.key), EXPECTED_EXTENSION_ID);
   assert.ok(manifest.description.length <= 132);
@@ -94,9 +95,9 @@ test('privacy, 404, robots, sitemap, and the worker config are in place', () => 
   assert.match(wrangler, /"name": "dcai-site"/);
   assert.match(wrangler, /"directory": "\.\/public"/);
   assert.match(wrangler, /"not_found_handling": "404-page"/);
-  const domainLines = wrangler.split('\n').filter((line) => line.includes('dcai.larehq.com') || line.includes('"routes"'));
-  assert.ok(domainLines.length > 0);
-  assert.ok(domainLines.every((line) => line.trim().startsWith('//')));
+  assert.match(wrangler, /"routes": \[\s*\{ "pattern": "dcai\.larehq\.com", "custom_domain": true \}\s*\]/);
+  const routeLines = wrangler.split('\n').filter((line) => line.includes('"routes"') || line.includes('dcai.larehq.com'));
+  assert.ok(routeLines.some((line) => line.includes('"custom_domain": true') && !line.trim().startsWith('//')));
   for (const file of ['favicon.svg', 'favicon-32.png', 'apple-touch-icon.png', 'og.png']) {
     assert.ok(fs.statSync(path.join(pub, file)).size > 32, file);
   }

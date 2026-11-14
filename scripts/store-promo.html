@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Double Click AI store tiles</title>
+  <style>
+    @font-face {
+      font-family: "Newsreader";
+      src: url("/site/public/fonts/newsreader-latin.woff2") format("woff2");
+      font-weight: 200 800;
+      font-style: normal;
+      font-display: block;
+    }
+    @font-face {
+      font-family: "Newsreader";
+      src: url("/site/public/fonts/newsreader-latin-italic.woff2") format("woff2");
+      font-weight: 200 800;
+      font-style: italic;
+      font-display: block;
+    }
+    @font-face {
+      font-family: "Plus Jakarta Sans";
+      src: url("/site/public/fonts/plus-jakarta-sans-latin.woff2") format("woff2");
+      font-weight: 200 800;
+      font-style: normal;
+      font-display: block;
+    }
+    :root {
+      --ink: #100e0c;
+      --cream: #f3ecdf;
+      --cream-text: #241c14;
+      --ivory: #f6f1e7;
+      --muted: #d9cbb8;
+      --quiet: #b3a89a;
+      --accent: #e39b4a;
+      --on-accent: #1a1208;
+      --serif: "Newsreader", "Iowan Old Style", Palatino, Georgia, serif;
+      --sans: "Plus Jakarta Sans", "Avenir Next", "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+    html, body { background: var(--ink); color: var(--ivory); }
+    body { overflow: hidden; font-family: var(--sans); }
+    .mark { position: relative; display: inline-block; flex: none; }
+    .mark::before, .mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    body.small { width: 440px; height: 280px; }
+    body.marquee { width: 1400px; height: 560px; }
+
+    .small-tile {
+      width: 440px;
+      height: 280px;
+      padding: 26px 28px 22px;
+      display: flex;
+      flex-direction: column;
+      background:
+        radial-gradient(420px 180px at 100% 0%, rgba(227, 155, 74, 0.16), transparent 70%),
+        var(--ink);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 650;
+      letter-spacing: 0.01em;
+    }
+    .small-tile .mark { width: 22px; height: 22px; }
+    .small-tile .mark::before, .small-tile .mark::after { top: 4px; width: 12px; height: 12px; }
+    .small-tile .mark::before { left: 0; }
+    .small-tile .mark::after { left: 8px; }
+    .small-tile .brand { font-size: 15px; }
+    .small-tile h1 {
+      margin-top: 16px;
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 34px;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+    .small-tile .kicker {
+      margin-top: 10px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .small-tile .quote {
+      margin-top: auto;
+      background: var(--cream);
+      color: var(--cream-text);
+      border-radius: 12px;
+      padding: 10px 12px 10px 14px;
+      border-left: 3px solid var(--accent);
+      font-family: var(--serif);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .marquee-tile {
+      width: 1400px;
+      height: 560px;
+      display: grid;
+      grid-template-columns: 640px 1fr;
+      align-items: center;
+      padding: 0 72px 0 76px;
+      background:
+        radial-gradient(700px 420px at 88% 70%, rgba(227, 155, 74, 0.14), transparent 68%),
+        var(--ink);
+    }
+    .copy .mark { width: 36px; height: 36px; }
+    .copy .mark::before, .copy .mark::after { top: 6px; width: 20px; height: 20px; }
+    .copy .mark::before { left: 0; }
+    .copy .mark::after { left: 14px; }
+    .copy .brand { font-size: 18px; }
+    .copy h1 {
+      margin-top: 22px;
+      max-width: 560px;
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 58px;
+      line-height: 1.02;
+      letter-spacing: -0.025em;
+    }
+    .copy .lede {
+      margin-top: 18px;
+      max-width: 460px;
+      color: var(--muted);
+      font-size: 20px;
+      line-height: 1.4;
+    }
+    .copy .kicker {
+      margin-top: 26px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 650;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .stage { position: relative; height: 430px; }
+    .page {
+      position: absolute;
+      top: 18px;
+      left: 8px;
+      width: 470px;
+      height: 360px;
+      background: var(--cream);
+      color: var(--cream-text);
+      border-radius: 18px;
+      padding: 28px 28px 24px;
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.28);
+    }
+    .page .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #8a5a2b;
+    }
+    .page h2 {
+      margin: 8px 0 12px;
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 1.1;
+    }
+    .page p {
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.45;
+      margin: 0 0 10px;
+    }
+    .page mark {
+      background: rgba(227, 155, 74, 0.45);
+      color: inherit;
+      padding: 0 2px;
+    }
+    .ask {
+      position: absolute;
+      right: 18px;
+      bottom: 8px;
+      width: 300px;
+      background: #14110e;
+      color: var(--ivory);
+      border: 1px solid rgba(243, 230, 208, 0.14);
+      border-radius: 16px;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+      padding: 12px 12px 14px;
+    }
+    .ask .bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 650;
+      font-size: 13px;
+    }
+    .ask .mark { width: 16px; height: 16px; }
+    .ask .mark::before, .ask .mark::after { top: 3px; width: 9px; height: 9px; }
+    .ask .mark::before { left: 0; }
+    .ask .mark::after { left: 6px; }
+    .ask .passage {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border-left: 2px solid var(--accent);
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .ask .row {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .ask .chip {
+      background: var(--accent);
+      color: var(--on-accent);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="small-tile" data-tile="small">
+    <div class="brand"><span class="mark" aria-hidden="true"></span> Double Click AI</div>
+    <h1>Highlight a passage.<br>Ask in place.</h1>
+    <p class="kicker">A LARE, LLC product</p>
+    <p class="quote">The fog missed the headland entirely. It sat in a pale bank offshore.</p>
+  </div>
+  <div class="marquee-tile" data-tile="marquee">
+    <div class="copy">
+      <div class="brand"><span class="mark" aria-hidden="true"></span> Double Click AI</div>
+      <h1>Highlight a passage and ask about it in place.</h1>
+      <p class="lede">The chat stays on the page, attached to the text you select.</p>
+      <p class="kicker">A LARE, LLC product</p>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <article class="page">
+        <div class="label">Field notes</div>
+        <h2>The night the fog missed the headland</h2>
+        <p>By ten the horn had gone quiet. The keeper walked the east wall and counted the intervals anyway.</p>
+        <p><mark>The fog missed the headland entirely. It sat in a pale bank offshore, bright enough to read by.</mark></p>
+      </article>
+      <section class="ask">
+        <div class="bar"><span class="mark"></span> Double Click AI</div>
+        <p class="passage">The fog missed the headland entirely.</p>
+        <div class="row"><span class="chip">Ask</span></div>
+      </section>
+    </div>
+  </div>
+  <script>
+    const tile = new URLSearchParams(location.search).get('tile') || 'small';
+    document.body.className = tile;
+    document.querySelectorAll('[data-tile]').forEach((node) => {
+      node.hidden = node.getAttribute('data-tile') !== tile;
+    });
+  </script>
+</body>
+</html>

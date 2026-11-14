@@ -1,6 +1,9 @@
 'use strict';
 
-const { EXPECTED_EXTENSION_ID } = require('./src/constants');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { configuredExtensionIds, isExtensionId, normalizeExtensionId } = require('./src/extension-ids');
 const { createRuntime } = require('./src/runtime');
 const { frameMessage, createParser } = require('./src/native-io');
 
@@ -8,8 +11,26 @@ function normalizeOrigin(origin) {
   return String(origin || '').trim().replace(/\/+$/, '').toLowerCase();
 }
 
-function originAllowed(origin) {
-  return normalizeOrigin(origin) === 'chrome-extension://' + EXPECTED_EXTENSION_ID;
+function readAllowedExtensionIds() {
+  const extras = [];
+  const home = process.env.DOUBLE_CLICK_HOME || path.join(os.homedir(), '.double-click');
+  try {
+    const config = JSON.parse(fs.readFileSync(path.join(home, 'host-config.json'), 'utf8'));
+    if (Array.isArray(config.extensionIds)) extras.push(...config.extensionIds);
+    if (config.extensionId) extras.push(config.extensionId);
+  } catch (_err) { /* helper not registered yet */ }
+  const accepted = [];
+  for (const value of extras) {
+    const id = normalizeExtensionId(value);
+    if (isExtensionId(id)) accepted.push(id);
+  }
+  return configuredExtensionIds(accepted);
+}
+
+function originAllowed(origin, ids) {
+  const allowed = ids || readAllowedExtensionIds();
+  const normalized = normalizeOrigin(origin);
+  return allowed.some((id) => normalized === 'chrome-extension://' + id);
 }
 
 function main() {

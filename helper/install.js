@@ -6,6 +6,13 @@ const path = require('path');
 const crypto = require('crypto');
 const { spawnSync } = require('child_process');
 const { HOST_NAME } = require('./src/constants');
+const {
+  assertExtensionId,
+  configuredExtensionIds,
+  extensionIdsFromArgv,
+  originsForExtensionIds,
+  uniqueExtensionIds,
+} = require('./src/extension-ids');
 
 function extensionIdFromKey(b64) {
   const der = Buffer.from(String(b64 || '').replace(/\s+/g, ''), 'base64');
@@ -61,26 +68,40 @@ function registryKeys() {
   return tails.map((tail) => 'HKCU\\Software\\' + tail + '\\NativeMessagingHosts\\' + HOST_NAME);
 }
 
+function planExtensionIds(opts) {
+  if (Array.isArray(opts.extensionIds)) {
+    if (!opts.extensionIds.length) throw new Error('At least one extension id is required');
+    return uniqueExtensionIds(opts.extensionIds.map((id) => assertExtensionId(id)));
+  }
+  if (opts.extensionId) return [assertExtensionId(opts.extensionId)];
+  return configuredExtensionIds();
+}
+
 function installPlan(opts) {
-  const origin = 'chrome-extension://' + opts.extensionId + '/';
+  const extensionIds = planExtensionIds(opts);
+  const origins = originsForExtensionIds(extensionIds);
   const hostManifest = {
     name: HOST_NAME,
     description: 'Double Click AI local helper',
     path: opts.launchPath,
     type: 'stdio',
-    allowed_origins: [origin],
+    allowed_origins: origins,
+  };
+  const base = {
+    hostManifest,
+    origin: origins[0],
+    origins,
+    extensionIds,
   };
   if (opts.platform === 'win32') {
     return {
-      hostManifest,
-      origin,
+      ...base,
       files: [{ path: opts.manifestPath, body: hostManifest }],
       registries: registryKeys().map((key) => ({ key, value: opts.manifestPath })),
     };
   }
   return {
-    hostManifest,
-    origin,
+    ...base,
     files: nativeMessagingDirs(opts.platform, opts.home).map((dir) => ({
       path: path.join(dir, HOST_NAME + '.json'),
       body: hostManifest,
@@ -185,8 +206,10 @@ function applyInstall(plan, opts) {
     if (opts.configPath) {
       fs.mkdirSync(path.dirname(opts.configPath), { recursive: true });
       fs.writeFileSync(opts.configPath, JSON.stringify({
+        allowedOrigins: plan.origins,
         allowedOrigin: plan.origin,
-        extensionId: opts.extensionId,
+        extensionIds: plan.extensionIds,
+        extensionId: plan.extensionIds[0],
         hostName: HOST_NAME,
       }, null, 2) + '\n');
     }
@@ -231,17 +254,18 @@ function pathsFor(repoRoot) {
 function main(argv = process.argv.slice(2)) {
   const repoRoot = path.resolve(__dirname, '..');
   const info = pathsFor(repoRoot);
+  const extensionIds = configuredExtensionIds(extensionIdsFromArgv(argv));
   const plan = installPlan({
     platform: info.platform,
     home: info.userHome,
-    extensionId: info.extensionId,
+    extensionIds,
     launchPath: info.launchPath,
     manifestPath: info.manifestPath,
   });
   const dryRun = argv.includes('--dry-run');
   if (argv.includes('--uninstall')) {
     uninstall(plan, { dryRun, platform: info.platform, launchPath: info.launchPath });
-    process.stdout.write('Removed the Double Click AI native host for ' + info.extensionId + '\n');
+    process.stdout.write('Removed the Double Click AI native host for ' + extensionIds.join(', ') + '\n');
     return plan;
   }
   applyInstall(plan, {
@@ -250,11 +274,13 @@ function main(argv = process.argv.slice(2)) {
     launchPath: info.launchPath,
     launchSource: launcherSource(stableNodePath(process.execPath), info.hostJs, info.platform),
     configPath: info.configPath,
-    extensionId: info.extensionId,
+    extensionId: extensionIds[0],
   });
   process.stdout.write('Double Click AI helper registered.\n');
-  process.stdout.write('Extension ID: ' + info.extensionId + '\n');
-  process.stdout.write('Allowed origin: ' + plan.origin + '\n');
+  process.stdout.write('Extension IDs: ' + extensionIds.join(', ') + '\n');
+  for (const origin of plan.origins) {
+    process.stdout.write('Allowed origin: ' + origin + '\n');
+  }
   process.stdout.write('Launcher: ' + info.launchPath + '\n');
   process.stdout.write('Host manifests: ' + plan.files.length + '\n');
   return plan;

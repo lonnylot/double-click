@@ -1,4 +1,5 @@
 node_modules/
+dist/
 .double-click/
 *.log
 .DS_Store
