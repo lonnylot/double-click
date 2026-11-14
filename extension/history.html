@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Double Click</title>
+  <link rel="stylesheet" href="history.css">
+  <link rel="icon" href="icons/icon32.png">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <div>
+        <h1>Double Click</h1>
+        <p>Passages and conversations stored on this computer.</p>
+      </div>
+    </div>
+    <button type="button" id="open-tab" class="ghost">Open in tab</button>
+  </header>
+  <div class="layout">
+    <aside>
+      <label class="search">
+        <span class="sr">Search</span>
+        <input id="search" type="search" placeholder="Search pages and conversations" autocomplete="off">
+      </label>
+      <div id="list" class="list"></div>
+    </aside>
+    <main id="detail"></main>
+  </div>
+  <details class="providers" id="providers">
+    <summary>Providers</summary>
+    <p id="helper-status" class="status"></p>
+    <div id="provider-list"></div>
+  </details>
+  <script src="lib/providers.js"></script>
+  <script src="lib/markdown.js"></script>
+  <script src="history.js"></script>
+</body>
+</html>

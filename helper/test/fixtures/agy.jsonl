@@ -1,0 +1,5 @@
+{"event":"init","conversation_id":"c3b66b04-872b-4fbe-a3a4-058a026ef20a","init":{"permission_mode":"request-review"}}
+{"event":"step_update","step_update":{"conversation_id":"c3b66b04-872b-4fbe-a3a4-058a026ef20a","state":"ACTIVE","step_type":"agent_response","text_delta":"Git rebase"}}
+{"event":"step_update","step_update":{"conversation_id":"c3b66b04-872b-4fbe-a3a4-058a026ef20a","state":"DONE","step_type":"agent_response","text_delta":" rewrites history.\n"}}
+{"event":"step_update","step_update":{"state":"DONE","step_type":"tool","tool_name":"run_command","text_delta":""}}
+{"event":"result","result":{"conversation_id":"c3b66b04-872b-4fbe-a3a4-058a026ef20a","status":"SUCCESS","response":"Git rebase rewrites history.\n"}}
