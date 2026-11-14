@@ -46,7 +46,7 @@
       optIn: true,
       installHint: 'npm install -g @anthropic-ai/claude-code',
       loginHint: 'claude auth login',
-      caveat: 'Anthropic’s terms do not allow third-party products to route requests through Claude plan credentials. Double Click only starts the Claude Code program already installed on this computer and never reads your login files. Turn this on only if you accept that arrangement.',
+      caveat: 'Anthropic’s terms do not allow third-party products to route requests through Claude plan credentials. Double Click AI only starts the Claude Code program already installed on this computer and never reads your login files. Turn this on only if you accept that arrangement.',
     },
     {
       id: 'mock',

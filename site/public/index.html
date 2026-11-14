@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Double Click AI — Highlight a passage and ask about it in place</title>
+  <meta name="description" content="Double Click AI is a Chrome extension from LARE, LLC. Select text, ask a question, and keep the thread. Replies come from the official AI command-line tools you already sign into. No API keys.">
+  <link rel="canonical" href="https://dcai.larehq.com/">
+  <meta name="theme-color" content="#100e0c">
+  <meta property="og:title" content="Double Click AI — Highlight a passage and ask about it in place">
+  <meta property="og:description" content="Double Click AI is a Chrome extension from LARE, LLC. Select text, ask a question, and keep the thread. Replies come from the official AI command-line tools you already sign into. No API keys.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dcai.larehq.com/">
+  <meta property="og:image" content="https://dcai.larehq.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Double Click AI. Highlight a passage and ask about it in place. A LARE, LLC product.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Double Click AI — Highlight a passage and ask about it in place">
+  <meta name="twitter:description" content="Double Click AI is a Chrome extension from LARE, LLC. Select text, ask a question, and keep the thread. Replies come from the official AI command-line tools you already sign into. No API keys.">
+  <meta name="twitter:image" content="https://dcai.larehq.com/og.png">
+  <meta name="twitter:image:alt" content="Double Click AI. Highlight a passage and ask about it in place. A LARE, LLC product.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="#top">
+        <span class="mark" aria-hidden="true"></span>
+        Double Click AI
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#providers">Providers</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#install">Install</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <a class="btn btn-primary btn-sm header-cta" data-chrome-cta href="https://github.com/lonnylot/double-click#install">Add to Chrome</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="kicker">A LARE, LLC product</p>
+          <h1>Highlight a passage and ask about it in place.</h1>
+          <p class="lede">A Chrome extension that opens a chat on the text you select. Replies come from the official AI command-line tools you already sign into on your computer. No API keys.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" data-chrome-cta href="https://github.com/lonnylot/double-click#install">Add to Chrome</a>
+            <a class="btn btn-secondary" href="https://github.com/lonnylot/double-click">View on GitHub</a>
+          </div>
+          <p class="hero-note">Open source. Install instructions are on GitHub.</p>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="browser">
+            <div class="browser-bar">
+              <div class="traffic"><i class="c"></i><i class="y"></i><i class="g"></i></div>
+              <div class="omnibox">fieldnotes.example/the-night-the-fog-missed-the-headland</div>
+            </div>
+            <div class="browser-stage">
+              <article class="essay">
+                <div class="kicker">Field notes</div>
+                <h2>The night the fog missed the headland</h2>
+                <p class="byline">November 13, 2026</p>
+                <p>By ten the horn had gone quiet. The keeper walked the east wall with a thermos and counted the intervals anyway.</p>
+                <p><mark class="sel">The fog missed the headland entirely. It sat in a pale bank offshore, bright enough to read by, and left the rocks dry and ordinary under the lamp.</mark></p>
+                <p>He wrote that down because it was the sort of thing that would sound invented later.</p>
+              </article>
+              <section class="dc-panel" role="presentation">
+                <header class="dc-bar">
+                  <div class="dc-brand"><span class="mark sm"></span><span>Double Click AI</span></div>
+                  <div class="dc-select">Codex</div>
+                  <div class="dc-icon">☰</div>
+                  <div class="dc-icon">×</div>
+                </header>
+                <blockquote class="dc-passage">The fog missed the headland entirely. It sat in a pale bank offshore, bright enough to read by, and left the rocks dry and ordinary under the lamp.</blockquote>
+                <div class="dc-thread">
+                  <article class="dc-user"><p>What is this night about?</p></article>
+                  <article class="dc-md">
+                    <p>The keeper is recording a <strong>seam</strong>: a clear shore sitting next to a wall of fog that never comes in.</p>
+                  </article>
+                  <article class="dc-user"><p>Why would he underline it?</p></article>
+                  <article class="dc-md">
+                    <p>Underlining is a second look—a mark for later, not a flourish added after the fact.<span class="dc-caret"></span></p>
+                  </article>
+                </div>
+                <div class="dc-composer">
+                  <div class="dc-input">Ask about this highlight</div>
+                  <div class="dc-stop">Stop</div>
+                </div>
+                <p class="dc-foot">Enter to send · Shift+Enter for a new line · Esc to close</p>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cream" id="how">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">How it works</p>
+          <h2>Highlight, ask, and keep the thread.</h2>
+          <p>The chat stays attached to the passage you selected. Follow-up questions continue the same conversation.</p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="num">1</div>
+            <h3>Highlight</h3>
+            <p>Select a passage on any page. A small Ask button appears beside it. Click it, or press Alt+Shift+D.</p>
+          </article>
+          <article class="step">
+            <div class="num">2</div>
+            <h3>Ask</h3>
+            <p>Choose a provider and type a question. The passage is sent as context, and the reply streams in as formatted text.</p>
+          </article>
+          <article class="step">
+            <div class="num">3</div>
+            <h3>Keep the thread</h3>
+            <p>Ask a follow-up in the same pop-up. Later, reopen the conversation from history—pages, highlights, and chats, stored in this browser.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="providers">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">Providers</p>
+          <h2>Uses the AI you already pay for.</h2>
+          <p>Double Click AI does not sell model access. It starts the official CLI you have installed and already signed into. Usage stays on that subscription.</p>
+        </div>
+        <div class="provider-grid">
+          <article class="provider">
+            <h3>ChatGPT via Codex</h3>
+            <p>Uses your ChatGPT sign-in through the Codex CLI.</p>
+            <span class="cli">codex</span>
+          </article>
+          <article class="provider">
+            <h3>Grok</h3>
+            <p>Uses a SuperGrok or X Premium+ sign-in through Grok Build.</p>
+            <span class="cli">grok</span>
+          </article>
+          <article class="provider">
+            <h3>Claude (opt-in)</h3>
+            <p>Uses a Claude subscription through Claude Code. Off until you turn it on.</p>
+            <span class="cli">claude</span>
+          </article>
+          <article class="provider">
+            <h3>GitHub Copilot</h3>
+            <p>Uses your Copilot subscription through the Copilot CLI.</p>
+            <span class="cli">copilot</span>
+          </article>
+          <article class="provider">
+            <h3>Cursor</h3>
+            <p>Uses your Cursor account through the Cursor agent CLI.</p>
+            <span class="cli">cursor-agent</span>
+          </article>
+          <article class="provider">
+            <h3>Google Antigravity</h3>
+            <p>Uses a Google AI account through the Antigravity CLI.</p>
+            <span class="cli">agy</span>
+          </article>
+        </div>
+        <p class="note">It runs through the official CLIs you are signed into. Nothing in Double Click AI asks for an API key, and the helper removes API-key environment variables so a tool does not silently switch to metered billing. If a CLI is missing or you are not signed in, the chat shows the install or login command. <strong>Claude Code stays off until you enable it.</strong> Anthropic’s terms do not allow third-party products to route requests through Claude plan credentials. Double Click AI only starts the Claude Code program already on your machine and never reads your login files.</p>
+      </div>
+    </section>
+
+    <section class="section cream" id="privacy">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">Privacy</p>
+          <h2>It runs on your computer.</h2>
+          <p>There is no Double Click AI server for your highlights or chats. The helper is a local program that Chrome starts itself.</p>
+        </div>
+        <div class="pillars">
+          <article class="pillar">
+            <h3>A local helper</h3>
+            <p>Chrome launches the helper through native messaging. It speaks only to this extension and does not open a listening port.</p>
+          </article>
+          <article class="pillar">
+            <h3>What leaves the machine</h3>
+            <p>Only the highlighted passage, the page title and address, and the question you type go to the provider you pick, through its official CLI.</p>
+          </article>
+          <article class="pillar">
+            <h3>History stays here</h3>
+            <p>Pages, highlights, and conversations are stored in this browser, on this computer. You can search them, reopen one, or delete them.</p>
+          </article>
+        </div>
+        <p class="more"><a href="/privacy">Read the privacy policy</a></p>
+      </div>
+    </section>
+
+    <section class="section" id="history">
+      <div class="wrap split">
+        <div class="section-head">
+          <p class="kicker">History</p>
+          <h2>Pages, highlights, and conversations in one place.</h2>
+          <p class="prose">The toolbar icon opens a side panel of what you have asked about. Conversations are grouped by page, then by highlight. Search the list, reopen a thread to continue it, or delete a conversation or a whole page.</p>
+        </div>
+        <aside class="hist-card" aria-hidden="true">
+          <div class="top">
+            <span class="mark sm"></span>
+            <div>
+              <strong>Double Click AI</strong>
+              <span>Passages and conversations stored on this computer.</span>
+            </div>
+          </div>
+          <div class="hist-search">Search pages and conversations</div>
+          <div class="hist-list">
+            <div class="hist-page">
+              The night the fog missed the headland
+              <div class="hist-url">fieldnotes.example/the-night-the-fog-missed-the-headland</div>
+            </div>
+            <div class="hist-item active">
+              <div class="excerpt">The fog missed the headland entirely. It sat in a pale bank offshore, bright enough to read by, and left the rocks dry and ordinary under the lamp.</div>
+              <div class="meta">Codex · Nov 13, 7:46 PM</div>
+            </div>
+            <div class="hist-item">
+              <div class="excerpt">A clear night is not a story. A clear night next to a wall of fog is a seam, and seams are where people look twice.</div>
+              <div class="meta">Grok · Nov 13, 7:40 PM</div>
+            </div>
+            <div class="hist-page">
+              Counting the intervals
+              <div class="hist-url">harbor-log.example/counting-the-intervals</div>
+            </div>
+            <div class="hist-item">
+              <div class="excerpt">The keeper walked the east wall with a thermos and counted the intervals anyway, the way you check a lock you already know is shut.</div>
+              <div class="meta">Copilot · Nov 13, 6:12 PM</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="open-source" style="padding-top: 0;">
+      <div class="wrap split start">
+        <div class="section-head">
+          <p class="kicker">Open source</p>
+          <h2>The source is public.</h2>
+          <p class="prose">Double Click AI is open source. You can read how the helper launches each CLI, how a conversation is resumed, and how API-key environment variables are stripped. Issues and changes happen in the repository.</p>
+          <div class="cta-row">
+            <a class="btn btn-secondary" href="https://github.com/lonnylot/double-click">View on GitHub</a>
+          </div>
+        </div>
+        <p class="note">
+          The repository is <a href="https://github.com/lonnylot/double-click">github.com/lonnylot/double-click</a>.
+          You can also load the extension unpacked from a local clone and register the helper with <code class="inline">node install.js</code>.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="install">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">Install</p>
+          <h2>Add the extension, then register the helper.</h2>
+          <p>Install from the repository for now. A small local helper has to be registered once so Chrome can start it.</p>
+        </div>
+        <div class="install-grid">
+          <ol class="install-steps">
+            <li>
+              <div class="num">1</div>
+              <div>
+                <h3>Add the extension</h3>
+                <p>Follow the <a href="https://github.com/lonnylot/double-click#install">install instructions on GitHub</a> and load Double Click AI unpacked from the <code class="inline">extension</code> folder.</p>
+              </div>
+            </li>
+            <li>
+              <div class="num">2</div>
+              <div>
+                <h3>Register the helper</h3>
+                <p>From the project folder, run <code class="inline">node install.js</code>. The same step will be available as an <code class="inline">npx</code> command when the package is published. Run the installer again if you move the repo or upgrade Node.</p>
+              </div>
+            </li>
+            <li>
+              <div class="num">3</div>
+              <div>
+                <h3>Sign in to a CLI</h3>
+                <p>Sign in to whichever tool you want to use, in a terminal—for example <code class="inline">codex login</code> or <code class="inline">grok login</code>. Then highlight text on a page and click Ask.</p>
+              </div>
+            </li>
+          </ol>
+          <div class="term">
+            <div class="term-bar">
+              <div class="traffic" aria-hidden="true"><i class="c"></i><i class="y"></i><i class="g"></i></div>
+              <span>double-click — zsh</span>
+            </div>
+            <pre><span class="prompt">~/Projects/double-click %</span> <span>node install.js</span>
+
+<span class="ok">Double Click AI helper registered.</span>
+Extension ID: dkaimfjbcdiaeialfejfhppmlmcafabc
+Allowed origin: chrome-extension://dkaimfjbcdiaeialfejfhppmlmcafabc/
+Launcher: /Users/you/.double-click/double-click-host
+Host manifests: 6
+
+<span class="prompt">~/Projects/double-click %</span> <span>npx double-click-ai</span>
+<span class="dim"># same helper registration, once the package is published</span>
+
+<span class="dim">~/Projects/double-click %</span> <span class="dc-caret" style="height:14px;vertical-align:middle"></span></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq" style="padding-top: 32px;">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="kicker">FAQ</p>
+          <h2>Questions that come up first.</h2>
+        </div>
+        <div class="faq">
+          <article class="faq-item">
+            <h3>Do I need an API key?</h3>
+            <p>No. Double Click AI starts the official CLI you are already signed into. The helper removes API-key environment variables so a tool does not silently switch to metered billing.</p>
+          </article>
+          <article class="faq-item">
+            <h3>What does the helper do?</h3>
+            <p>It is a small local program that Chrome starts through native messaging. It talks only to this extension and does not open a listening port. Each turn runs in an empty temporary folder.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Why is Claude off by default?</h3>
+            <p>Anthropic’s terms do not allow third-party products to route requests through Claude plan credentials. Double Click AI only starts the Claude Code program already installed on your computer and never reads your login files. Turn it on only if you accept that arrangement. The switch is in the chat and again under Providers in history.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Where is conversation history stored?</h3>
+            <p>In this browser, on this computer. Double Click AI does not host your highlights or chats.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Can I install it from the repository?</h3>
+            <p>Yes. Load the unpacked extension from the <code class="inline">extension</code> folder, then run <code class="inline">node install.js</code>. The source is at github.com/lonnylot/double-click.</p>
+          </article>
+          <article class="faq-item">
+            <h3>What is the keyboard shortcut?</h3>
+            <p>Alt+Shift+D, after you have selected text.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>© 2026 LARE, LLC</div>
+      <div class="foot-links">
+        <a href="https://dcai.larehq.com">dcai.larehq.com</a>
+        <a href="https://github.com/lonnylot/double-click">GitHub</a>
+        <a href="/privacy">Privacy</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </footer>
+  <script src="config.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

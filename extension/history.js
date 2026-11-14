@@ -342,7 +342,7 @@ function renderDetail() {
 function renderProviders() {
   statusEl.textContent = state.nativeConnected
     ? 'Helper connected.'
-    : (state.nativeError || 'Helper not connected. From the Double Click folder, run node install.js');
+    : (state.nativeError || 'Helper not connected. From the Double Click AI folder, run node install.js');
   providerEl.replaceChildren();
   const reported = new Map((state.providers || []).map((item) => [item.id, item]));
   for (const item of providerList) {

@@ -74,7 +74,7 @@ function connectNative() {
         kind: 'error',
         code: 'disconnected',
         message: 'The helper disconnected before the reply finished.',
-        hint: 'From the Double Click folder, run: node install.js',
+        hint: 'From the Double Click AI folder, run: node install.js',
       });
     }
     broadcast({ type: 'native-status', connected: false, error: nativeError });
@@ -242,8 +242,8 @@ async function beginTurn(message, port) {
     failTurn(turn, message.requestId, {
       kind: 'error',
       code: 'no_helper',
-      message: 'The Double Click helper is not installed.',
-      hint: 'From the Double Click folder, run: node install.js',
+      message: 'The Double Click AI helper is not installed.',
+      hint: 'From the Double Click AI folder, run: node install.js',
     });
     return;
   }
@@ -270,7 +270,7 @@ async function beginTurn(message, port) {
       kind: 'error',
       code: 'no_helper',
       message: 'Could not reach the helper.',
-      hint: (err && err.message) || 'From the Double Click folder, run: node install.js',
+      hint: (err && err.message) || 'From the Double Click AI folder, run: node install.js',
     });
   }
 }
@@ -279,7 +279,7 @@ function setupMenus() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: 'ask',
-      title: 'Ask Double Click',
+      title: 'Ask Double Click AI',
       contexts: ['selection'],
     });
   });

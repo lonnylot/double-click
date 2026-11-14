@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy policy — Double Click AI</title>
+  <meta name="description" content="Privacy policy for Double Click AI, a LARE, LLC product. Highlights and questions go only to the provider CLI you pick. History stays in the browser. No analytics.">
+  <link rel="canonical" href="https://dcai.larehq.com/privacy">
+  <meta name="theme-color" content="#100e0c">
+  <meta property="og:title" content="Privacy policy — Double Click AI">
+  <meta property="og:description" content="What Double Click AI sends, what stays on your computer, and who operates it. A LARE, LLC product.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://dcai.larehq.com/privacy">
+  <meta property="og:image" content="https://dcai.larehq.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Double Click AI. Highlight a passage and ask about it in place. A LARE, LLC product.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Privacy policy — Double Click AI">
+  <meta name="twitter:description" content="What Double Click AI sends, what stays on your computer, and who operates it. A LARE, LLC product.">
+  <meta name="twitter:image" content="https://dcai.larehq.com/og.png">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="/">
+        <span class="mark" aria-hidden="true"></span>
+        Double Click AI
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="nav" id="site-nav" aria-label="Primary">
+        <a href="/#how">How it works</a>
+        <a href="/#providers">Providers</a>
+        <a href="/privacy" aria-current="page">Privacy</a>
+        <a href="/#install">Install</a>
+        <a href="/#faq">FAQ</a>
+      </nav>
+      <a class="btn btn-primary btn-sm header-cta" data-chrome-cta href="https://github.com/lonnylot/double-click#install">Add to Chrome</a>
+    </div>
+  </header>
+
+  <main id="main" class="section">
+    <div class="wrap">
+      <article class="policy">
+        <p class="kicker">Privacy policy</p>
+        <h1>What Double Click AI does with a highlight.</h1>
+        <p class="updated">Effective November 14, 2026. Operated by LARE, LLC.</p>
+        <p>Double Click AI is a Chrome extension and a local helper. This policy covers the extension, the helper, and this website. It is written so you can see what leaves your computer before you install.</p>
+
+        <h2>Who operates it</h2>
+        <p>LARE, LLC operates Double Click AI and this website. There is no Double Click AI account, and LARE, LLC does not run a server that receives your highlights or chats.</p>
+
+        <h2>What is sent, and where it goes</h2>
+        <p>When you highlight a passage and ask a question, Double Click AI sends that turn only to the official command-line tool for the provider you pick. The helper starts that program on your computer, using the sign-in you already have. The following go to that provider, and nowhere else:</p>
+        <ul>
+          <li>the highlighted passage</li>
+          <li>the page title</li>
+          <li>the page URL</li>
+          <li>the question you type, and earlier messages in that same conversation when you ask a follow-up</li>
+        </ul>
+        <p>The provider’s own terms and privacy policy then apply to what their program does with that turn. Double Click AI does not add a copy of the turn for itself. It does not ask for an API key, and the helper removes API-key environment variables so a tool does not silently switch to metered billing. The helper does not read the login files those tools keep on disk.</p>
+        <p>Claude Code stays off until you turn it on. Anthropic’s terms do not allow third-party products to route requests through Claude plan credentials. If you enable it, Double Click AI only starts the Claude Code program already installed on your computer.</p>
+
+        <h2>What stays in the browser</h2>
+        <p>Pages, highlights, and conversations are stored in this browser, on this computer, in the extension’s local database. Double Click AI does not upload that history. You can search it, reopen a thread, or delete a conversation or a whole page from the side panel.</p>
+        <p>The helper keeps a local map from a conversation to that provider’s session id, in a file under your home directory, so a follow-up can resume. That file holds the provider name and the session id. It does not hold the passage, the page, or the question. Uninstalling the helper with <code class="inline">node install.js --uninstall</code> removes the host registration. Deleting conversations in the extension removes them from the browser.</p>
+
+        <h2>What the extension can see</h2>
+        <p>On pages you visit, the extension can read the text you select, plus the title and URL of that page, so it can show Ask and send the turn you start. It does not send other page content. It does not read your browsing history as a list of sites. The toolbar icon opens history stored by the extension itself. A context-menu item, “Ask Double Click AI,” appears when text is selected.</p>
+        <p>Chrome permissions used for that are storage, native messaging, the side panel, and context menus. Native messaging lets Chrome start the local helper. The helper speaks only to this extension and does not open a listening port. Each turn runs in an empty temporary folder.</p>
+
+        <h2>This website</h2>
+        <p>dcai.larehq.com is a static site. It does not set cookies, does not ask you to sign in, and does not run analytics. The pages do not collect the text you read here.</p>
+
+        <h2>Analytics</h2>
+        <p>The extension, the helper, and this website do not include analytics. If analytics are added later, this policy will be updated before they run.</p>
+
+        <h2>Selling and sharing</h2>
+        <p>LARE, LLC does not sell personal information and does not share highlights or questions with anyone other than the provider CLI you choose for that turn. There is no advertising in the extension.</p>
+
+        <h2>Children</h2>
+        <p>Double Click AI is not directed at children under 13, and LARE, LLC does not knowingly collect personal information from them.</p>
+
+        <h2>Changes</h2>
+        <p>If this policy changes, the effective date above will change with it. The current version is the one published at this address.</p>
+
+        <h2>Contact</h2>
+        <p>Questions about this policy can go to the project at <a href="https://github.com/lonnylot/double-click/issues">github.com/lonnylot/double-click</a>.</p>
+
+        <h2>Governing law</h2>
+        <p>This policy is governed by the laws of the State of Florida, without regard to conflict-of-law rules.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>© 2026 LARE, LLC</div>
+      <div class="foot-links">
+        <a href="https://dcai.larehq.com">dcai.larehq.com</a>
+        <a href="https://github.com/lonnylot/double-click">GitHub</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/#faq">FAQ</a>
+      </div>
+    </div>
+  </footer>
+  <script src="config.js"></script>
+  <script src="site.js"></script>
+</body>
+</html>

@@ -65,7 +65,7 @@ function installPlan(opts) {
   const origin = 'chrome-extension://' + opts.extensionId + '/';
   const hostManifest = {
     name: HOST_NAME,
-    description: 'Double Click local helper',
+    description: 'Double Click AI local helper',
     path: opts.launchPath,
     type: 'stdio',
     allowed_origins: [origin],
@@ -164,7 +164,7 @@ function main(argv = process.argv.slice(2)) {
   const dryRun = argv.includes('--dry-run');
   if (argv.includes('--uninstall')) {
     uninstall(plan, { dryRun, platform: info.platform, launchPath: info.launchPath });
-    process.stdout.write('Removed the Double Click native host for ' + info.extensionId + '\n');
+    process.stdout.write('Removed the Double Click AI native host for ' + info.extensionId + '\n');
     return plan;
   }
   applyInstall(plan, {
@@ -175,7 +175,7 @@ function main(argv = process.argv.slice(2)) {
     configPath: info.configPath,
     extensionId: info.extensionId,
   });
-  process.stdout.write('Double Click helper registered.\n');
+  process.stdout.write('Double Click AI helper registered.\n');
   process.stdout.write('Extension ID: ' + info.extensionId + '\n');
   process.stdout.write('Allowed origin: ' + plan.origin + '\n');
   process.stdout.write('Launcher: ' + info.launchPath + '\n');

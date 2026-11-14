@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="public/styles.css">
+  <style>
+    html, body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      margin: 0;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      background:
+        radial-gradient(900px 520px at 88% 0%, #2a241e 0%, #100e0c 64%);
+    }
+    .card { padding: 72px 80px; }
+    .mark.lg { width: 48px; height: 48px; }
+    .mark.lg::before,
+    .mark.lg::after {
+      top: 8px;
+      width: 26px;
+      height: 26px;
+    }
+    .mark.lg::after { left: 18px; }
+    .card .kicker { margin: 28px 0 18px; }
+    .card h1 {
+      font: 500 68px/1.08 "Newsreader", "Iowan Old Style", Palatino, Georgia, serif;
+      color: #f6f1e7;
+      margin: 0;
+      max-width: 12ch;
+    }
+    .brand {
+      margin-top: 28px;
+      font: 650 22px/1 "Plus Jakarta Sans", "Avenir Next", "Segoe UI", sans-serif;
+      color: #f6f1e7;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="mark lg"></span>
+    <p class="kicker">A LARE, LLC product</p>
+    <h1>Highlight a passage and ask about it in place.</h1>
+    <p class="brand">Double Click AI</p>
+  </div>
+</body>
+</html>
