@@ -339,6 +339,15 @@ function renderDetail() {
   detailEl.append(head, passage, thread, form);
 }
 
+function saveProviderPath(id, value) {
+  const providerPaths = { ...(state.settings.providerPaths || {}) };
+  const trimmed = String(value || '').trim();
+  if (trimmed) providerPaths[id] = trimmed;
+  else delete providerPaths[id];
+  state.settings = { ...state.settings, providerPaths };
+  if (state.port) state.port.postMessage({ type: 'settings-set', settings: state.settings });
+}
+
 function renderProviders() {
   statusEl.textContent = state.nativeConnected
     ? 'Helper connected.'
@@ -353,6 +362,15 @@ function renderProviders() {
     const ready = live.installed;
     name.textContent = item.label + (ready === false ? ' — not installed' : '');
     const hints = document.createElement('div');
+    if (!item.demo && reported.has(item.id)) {
+      const resolved = document.createElement('div');
+      const code = document.createElement('code');
+      if (live.resolvedPath) code.textContent = live.resolvedPath;
+      else if (live.detectedPath) code.textContent = 'Not found. Detected ' + live.detectedPath;
+      else code.textContent = 'Not found';
+      resolved.append(code);
+      hints.append(resolved);
+    }
     if (live.installHint) {
       const install = document.createElement('div');
       const code = document.createElement('code');
@@ -367,7 +385,34 @@ function renderProviders() {
       login.append(code);
       hints.append(login);
     }
+    if (live.pathNote) {
+      const note = document.createElement('p');
+      note.className = 'caveat';
+      note.textContent = live.pathNote;
+      hints.append(note);
+    }
     card.append(name, hints);
+    if (!item.demo) {
+      const field = document.createElement('label');
+      field.className = 'path-field';
+      const caption = document.createElement('span');
+      caption.textContent = 'Custom path';
+      const box = document.createElement('input');
+      box.type = 'text';
+      box.spellcheck = false;
+      box.autocomplete = 'off';
+      box.placeholder = 'Optional absolute path';
+      box.value = (state.settings.providerPaths && state.settings.providerPaths[item.id]) || '';
+      box.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          box.blur();
+        }
+      });
+      box.addEventListener('change', () => saveProviderPath(item.id, box.value));
+      field.append(caption, box);
+      card.append(field);
+    }
     if (item.id === 'claude') {
       const note = document.createElement('p');
       note.className = 'caveat';

@@ -44,7 +44,7 @@ You need Node.js 18 or newer, and Google Chrome.
    node install.js
    ```
 
-   The installer writes a Chrome native-messaging host for Chrome, Chromium, Edge, and Brave on macOS and Linux, and the HKCU registry entries plus a `.cmd` launcher on Windows. It records the absolute path to this repo’s `helper/host.js` and to the Node binary used for the install. Run it again if you move the repo or upgrade Node. `node install.js --uninstall` removes the registration.
+   The installer writes a Chrome native-messaging host for Chrome, Chromium, Edge, and Brave on macOS and Linux, and the HKCU registry entries plus a `.cmd` launcher on Windows. It records the absolute path to this repo’s `helper/host.js` and a stable path to Node: the Homebrew `opt` symlink (for example `/opt/homebrew/opt/node@24/bin/node`) when Node is a versioned Cellar build, otherwise the `command -v node` entry without resolving that symlink. Run `node install.js` again after you pull updates, move the repo, or upgrade Node, then restart Chrome so it relaunches the helper. `node install.js --uninstall` removes the registration.
 
 4. Sign in to the CLIs you want to use, in a terminal:
 
@@ -61,7 +61,7 @@ You need Node.js 18 or newer, and Google Chrome.
 
 The helper speaks only to `chrome-extension://dkaimfjbcdiaeialfejfhppmlmcafabc/`. It is started by Chrome over native messaging. There is no listening port.
 
-Binaries are invoked by name: `grok`, `cursor-agent`, `codex`, `copilot`, `agy`, `claude`. The generic `agent` command is never used, because Grok and Cursor have both shipped it.
+Binaries are invoked by name: `grok`, `cursor-agent`, `codex`, `copilot`, `agy`, `claude`. The helper looks them up on your login shell’s PATH, plus the usual install directories (`~/.local/bin`, `~/.grok/bin`, Homebrew, npm, nvm, Volta, fnm, asdf), because Chrome’s own PATH is only `/usr/bin:/bin:/usr/sbin:/sbin` when it is launched from the Dock. The generic `agent` command is never used, because Grok and Cursor have both shipped it. The Providers section of history shows the path that will run, and you can set an absolute path for one tool there.
 
 ## How a turn runs
 

@@ -8,7 +8,20 @@ const inflight = new Map();
 let nativePort = null;
 let nativeError = 'The helper is not connected yet.';
 let providers = [];
-let settings = { provider: 'codex', claudeOptIn: false };
+let settings = { provider: 'codex', claudeOptIn: false, providerPaths: {} };
+
+function sanitizeProviderPaths(value) {
+  const ids = new Set(globalThis.DoubleClickProviders.LIST.map((item) => item.id));
+  const out = {};
+  if (!value || typeof value !== 'object') return out;
+  for (const [id, raw] of Object.entries(value)) {
+    if (!ids.has(id) || id === 'mock' || typeof raw !== 'string') continue;
+    const trimmed = raw.trim();
+    if (!trimmed || trimmed.length > 1024 || /[\r\n\0]/.test(trimmed)) continue;
+    out[id] = trimmed;
+  }
+  return out;
+}
 
 function post(port, message) {
   try {
@@ -24,20 +37,37 @@ function broadcast(message) {
 
 async function loadSettings() {
   const stored = await chrome.storage.local.get('settings');
-  settings = Object.assign({ provider: 'codex', claudeOptIn: false }, stored.settings || {});
+  settings = Object.assign({ provider: 'codex', claudeOptIn: false, providerPaths: {} }, stored.settings || {});
   if (!globalThis.DoubleClickProviders.byId(settings.provider)) settings.provider = 'codex';
   settings.claudeOptIn = settings.claudeOptIn === true;
+  settings.providerPaths = sanitizeProviderPaths(settings.providerPaths);
   return settings;
 }
 
 async function saveSettings(next) {
+  const incoming = next || {};
   settings = {
-    provider: globalThis.DoubleClickProviders.byId(next.provider) ? next.provider : settings.provider,
-    claudeOptIn: next.claudeOptIn === true,
+    provider: globalThis.DoubleClickProviders.byId(incoming.provider) ? incoming.provider : settings.provider,
+    claudeOptIn: incoming.claudeOptIn === true,
+    providerPaths: Object.prototype.hasOwnProperty.call(incoming, 'providerPaths')
+      ? sanitizeProviderPaths(incoming.providerPaths)
+      : settings.providerPaths,
   };
   await chrome.storage.local.set({ settings });
   broadcast({ type: 'settings', settings });
+  requestProviders();
   return settings;
+}
+
+function requestProviders() {
+  if (!nativePort) return false;
+  try {
+    nativePort.postMessage({ type: 'providers', providerPaths: settings.providerPaths || {} });
+    return true;
+  } catch (_err) {
+    nativePort = null;
+    return false;
+  }
 }
 
 async function touchHistory() {
@@ -79,11 +109,8 @@ function connectNative() {
     }
     broadcast({ type: 'native-status', connected: false, error: nativeError });
   });
-  try {
-    nativePort.postMessage({ type: 'providers' });
-  } catch (_err) {
-    nativePort = null;
-    nativeError = 'The helper rejected the connection.';
+  if (!requestProviders()) {
+    nativeError = nativeError || 'The helper rejected the connection.';
     return false;
   }
   return true;
@@ -264,6 +291,7 @@ async function beginTurn(message, port) {
       userText: message.userText,
       priorMessages: prior,
       claudeOptIn: settings.claudeOptIn === true,
+      providerPath: (settings.providerPaths && settings.providerPaths[provider]) || '',
     });
   } catch (err) {
     failTurn(turn, message.requestId, {

@@ -96,6 +96,83 @@ function launcherSource(nodePath, hostJs, platform) {
   return '#!/bin/sh\nexec "' + nodePath + '" "' + hostJs + '" "$@"\n';
 }
 
+// process.execPath is the realpath. Homebrew's is versioned
+// (.../Cellar/node@24/24.22.1/bin/node) and breaks on `brew upgrade`.
+function cellarOptPath(execPath) {
+  const normalized = String(execPath || '').replace(/\\/g, '/');
+  const match = /^(.*)\/Cellar\/([^/]+)\/[^/]+\/(bin\/node(?:\.exe)?)$/i.exec(normalized);
+  if (!match) return null;
+  const stable = match[1] + '/opt/' + match[2] + '/' + match[3];
+  if (String(execPath).includes('\\') && !String(execPath).includes('/')) return stable.replace(/\//g, '\\');
+  return stable;
+}
+
+function isCellarVersionPath(file) {
+  return /\/Cellar\/[^/]+\/[^/]+\//.test(String(file || '').replace(/\\/g, '/'));
+}
+
+function fileExists(file) {
+  try {
+    fs.accessSync(file, fs.constants.X_OK);
+    return true;
+  } catch (_err) {
+    return false;
+  }
+}
+
+// Return a PATH entry for this Node without resolving it to its realpath.
+function pathEntryForExec(execPath, pathValue, realpathImpl = fs.realpathSync) {
+  let real = execPath;
+  try {
+    real = realpathImpl(execPath);
+  } catch (_err) { /* compare against the given path */ }
+  const name = process.platform === 'win32' ? 'node.exe' : 'node';
+  const hits = [];
+  for (const dir of String(pathValue || '').split(path.delimiter).filter(Boolean)) {
+    const candidate = path.join(dir, name);
+    try {
+      if (realpathImpl(candidate) === real) hits.push(candidate);
+    } catch (_err) { /* not this directory */ }
+  }
+  return hits.find((hit) => !isCellarVersionPath(hit)) || null;
+}
+
+function commandVNode(options = {}) {
+  const spawn = options.spawn || spawnSync;
+  const shell = options.shell || '/bin/sh';
+  let result;
+  try {
+    result = spawn(shell, ['-c', 'command -v node'], {
+      encoding: 'utf8',
+      timeout: 2000,
+      env: options.env || process.env,
+    });
+  } catch (_err) {
+    return null;
+  }
+  const line = String((result && result.stdout) || '').trim().split(/\r?\n/).filter(Boolean).pop() || '';
+  if (!line || !path.isAbsolute(line) || isCellarVersionPath(line)) return null;
+  return line;
+}
+
+function stableNodePath(execPath, options = {}) {
+  const exists = options.exists || fileExists;
+  const opt = cellarOptPath(execPath);
+  if (opt && exists(opt)) return opt;
+  const pathValue = options.pathValue === undefined || options.pathValue === null
+    ? (process.env.PATH || '')
+    : options.pathValue;
+  const fromPath = options.pathEntry === undefined
+    ? pathEntryForExec(execPath, pathValue, options.realpath || fs.realpathSync)
+    : options.pathEntry;
+  if (fromPath && !isCellarVersionPath(fromPath) && exists(fromPath)) return fromPath;
+  const commandPath = options.commandPath === undefined ? commandVNode(options) : options.commandPath;
+  if (commandPath && path.isAbsolute(commandPath) && !isCellarVersionPath(commandPath) && exists(commandPath)) {
+    return commandPath;
+  }
+  return execPath;
+}
+
 function applyInstall(plan, opts) {
   if (!opts.dryRun) {
     fs.mkdirSync(path.dirname(opts.launchPath), { recursive: true });
@@ -171,7 +248,7 @@ function main(argv = process.argv.slice(2)) {
     dryRun,
     platform: info.platform,
     launchPath: info.launchPath,
-    launchSource: launcherSource(process.execPath, info.hostJs, info.platform),
+    launchSource: launcherSource(stableNodePath(process.execPath), info.hostJs, info.platform),
     configPath: info.configPath,
     extensionId: info.extensionId,
   });
@@ -199,6 +276,10 @@ module.exports = {
   registryKeys,
   installPlan,
   launcherSource,
+  cellarOptPath,
+  isCellarVersionPath,
+  pathEntryForExec,
+  stableNodePath,
   applyInstall,
   main,
 };
