@@ -21,7 +21,7 @@ const claude = {
   command: 'claude',
   optIn: true,
   caveat:
-    'Anthropic’s terms do not allow third-party products to route requests through Claude plan credentials. Double Click only starts the Claude Code program already installed on this computer and never reads your login files.',
+    'Anthropic’s terms do not allow third-party products to route requests through Claude plan credentials. Double Click AI only starts the Claude Code program already installed on this computer and never reads your login files.',
   installHint: 'npm install -g @anthropic-ai/claude-code',
   loginHint: 'claude auth login',
   buildTurn(turn, _cwd) {

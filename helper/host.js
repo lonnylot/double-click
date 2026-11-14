@@ -17,7 +17,7 @@ function main() {
   if (!originAllowed(origin)) {
     const frame = frameMessage({
       type: 'error',
-      message: 'This helper only accepts the Double Click extension.',
+      message: 'This helper only accepts the Double Click AI extension.',
     });
     process.stdout.write(frame, () => process.exit(1));
     return;

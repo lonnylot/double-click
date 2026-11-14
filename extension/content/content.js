@@ -26,14 +26,14 @@ if (!globalThis.__doubleClickInstalled) {
   const panel = document.createElement('section');
   panel.className = 'dc-panel';
   panel.setAttribute('role', 'dialog');
-  panel.setAttribute('aria-label', 'Double Click');
+  panel.setAttribute('aria-label', 'Double Click AI');
   panel.hidden = true;
 
   const bar = document.createElement('header');
   bar.className = 'dc-bar';
   const brand = document.createElement('div');
   brand.className = 'dc-brand';
-  brand.innerHTML = '<span class="dc-mark" aria-hidden="true"></span><span>Double Click</span>';
+  brand.innerHTML = '<span class="dc-mark" aria-hidden="true"></span><span>Double Click AI</span>';
   const select = document.createElement('select');
   select.className = 'dc-select';
   select.setAttribute('aria-label', 'Provider');
@@ -109,7 +109,7 @@ if (!globalThis.__doubleClickInstalled) {
       ui.port = null;
       if (ui.streaming) {
         ui.streaming = false;
-        ui.error = { message: 'The helper disconnected.', hint: 'From the Double Click folder, run: node install.js' };
+        ui.error = { message: 'The helper disconnected.', hint: 'From the Double Click AI folder, run: node install.js' };
         paint();
       }
     });

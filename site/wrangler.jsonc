@@ -1,0 +1,13 @@
+{
+  "name": "dcai-site",
+  "compatibility_date": "2026-11-14",
+  "assets": {
+    "directory": "./public",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+  // Attach the domain in the Cloudflare dashboard, or uncomment once the
+  // larehq.com zone is on this account. Do not set a custom domain here
+  // until that zone is available to the deploy.
+  // "routes": [{ "pattern": "dcai.larehq.com", "custom_domain": true }]
+}

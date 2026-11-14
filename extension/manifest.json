@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Double Click",
+  "name": "Double Click AI",
+  "short_name": "Double Click AI",
   "version": "0.1.0",
-  "description": "Highlight a passage and ask about it with the AI tools you already use.",
+  "description": "Highlight a passage and ask about it in place, using the AI tools you already sign in to. A LARE, LLC product.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtpXCR/seO7KyqSPca07/8j7/Mmf0RP+TBIWCFHI/nXSXftw2ltsqevRaEsHviygE9edReN7QgVOOz/A8bQwDFErd+VSYPfkn9WiAsYi4gcD5MDl4GLkCz7nm5rluzxGvVuAzd15fVYZQJlaT3EuEflgG4V3u4sca9nmhmqe/vUtZI3Dmh7kavzRJJN6u0s9vLK/89+LW66sqCqKAHE6ileectdS5/3uGtg1K97KEteQVSq7jjnrcGd4lMKJ+y9EUrJEYFuugde5pYzF4uGK3Qt0NiF8yLLhJ08PrkZO6gH1dl/f6t4kpABPNNug9BFfOKSjx8CVzWyQPqiD2Eo+scQIDAQAB",
   "minimum_chrome_version": "116",
   "permissions": ["storage", "nativeMessaging", "sidePanel", "contextMenus"],
@@ -10,7 +11,7 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Double Click history",
+    "default_title": "Double Click AI history",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",

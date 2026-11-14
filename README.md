@@ -1,4 +1,4 @@
-# Double Click
+# Double Click AI
 
 Highlight a passage on any page and ask about it, without leaving the page. Answers come from the AI command-line tools you are already signed into, on this computer. A LARE, LLC product.
 
@@ -7,13 +7,13 @@ Highlight a passage on any page and ask about it, without leaving the page. Answ
 - Select text. A small Ask button appears by the highlight. Click it, or press Alt+Shift+D.
 - The passage stays attached to the conversation as context. Follow-up questions continue the same thread, and replies stream in as formatted text.
 - The toolbar icon opens a history of pages, highlights, and conversations. Search them, reopen one to continue, or delete a conversation or a whole page.
-- Pick which signed-in tool answers. Nothing in Double Click asks for an API key.
+- Pick which signed-in tool answers. Nothing in Double Click AI asks for an API key.
 
-The chat is drawn in a shadow root, so the page’s styles do not restyle it, and Double Click does not restyle the page.
+The chat is drawn in a shadow root, so the page’s styles do not restyle it, and Double Click AI does not restyle the page.
 
 ## Subscriptions that work
 
-Double Click does not sell model access. It starts the CLI you installed and already logged in:
+Double Click AI does not sell model access. It starts the CLI you installed and already logged in:
 
 | Tool | Command | Account |
 | --- | --- | --- |
@@ -24,11 +24,11 @@ Double Click does not sell model access. It starts the CLI you installed and alr
 | Cursor | `cursor-agent` | Cursor account |
 | Claude Code | `claude` | Claude subscription, off until you enable it |
 
-**Claude Code is opt-in.** Anthropic’s terms do not allow third-party products to route requests through Claude plan credentials. Double Click only launches the `claude` program already on your machine, never passes `--bare` (that mode skips subscription login), and never reads Claude credential files. Enable it only if that arrangement is acceptable for your account. The switch is in the chat, next to the provider list, and again under Providers in history.
+**Claude Code is opt-in.** Anthropic’s terms do not allow third-party products to route requests through Claude plan credentials. Double Click AI only launches the `claude` program already on your machine, never passes `--bare` (that mode skips subscription login), and never reads Claude credential files. Enable it only if that arrangement is acceptable for your account. The switch is in the chat, next to the provider list, and again under Providers in history.
 
 A Sample reply provider is included so you can try the popup before any CLI is installed. It does not contact a model.
 
-Each run uses an empty temporary folder, read-only or no-tool flags where the CLI documents them, and a cleaned environment. These variables are removed so a CLI does not silently switch from your subscription to metered API billing: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN`, `XAI_API_KEY`, `CODEX_API_KEY`, `GEMINI_API_KEY`, `CURSOR_API_KEY`, `GH_TOKEN`, `GITHUB_TOKEN`, `COPILOT_GITHUB_TOKEN`, and the same vendors’ other `*_API_KEY` / `*_TOKEN` variables. Double Click does not read `~/.codex`, `~/.claude`, `~/.grok`, or other CLI login files.
+Each run uses an empty temporary folder, read-only or no-tool flags where the CLI documents them, and a cleaned environment. These variables are removed so a CLI does not silently switch from your subscription to metered API billing: `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN`, `XAI_API_KEY`, `CODEX_API_KEY`, `GEMINI_API_KEY`, `CURSOR_API_KEY`, `GH_TOKEN`, `GITHUB_TOKEN`, `COPILOT_GITHUB_TOKEN`, and the same vendors’ other `*_API_KEY` / `*_TOKEN` variables. Double Click AI does not read `~/.codex`, `~/.claude`, `~/.grok`, or other CLI login files.
 
 If a CLI is missing or not signed in, the chat shows the install or login command instead of a blank failure.
 
@@ -80,3 +80,18 @@ npm run lint
 Tests cover adapter parsers against fixture streams, argument shape (including the Claude and Cursor constraints), session-id storage, environment stripping, message chunking, the installer paths for macOS, Linux, and Windows, a fake Codex process, and the mock provider through the real native-messaging frames.
 
 `npm run capture` loads the unpacked extension in headless Chrome, asks the sample provider about `demo/article.html`, and writes popup and history screenshots. Run `node install.js` first so Chrome can start the helper. Branded Chrome ignores `--load-extension`; point `CHROME_PATH` at Chrome for Testing when you need that flag.
+
+## Site
+
+The landing page is a static site in `site/` for [dcai.larehq.com](https://dcai.larehq.com). It deploys as a Cloudflare Worker with static assets and no Worker script. The Worker name is `dcai-site`. `site/wrangler.jsonc` serves `site/public`, uses `404.html` for unknown paths, and leaves the custom domain commented out.
+
+```bash
+cd site
+npx wrangler deploy
+```
+
+Wrangler prints a workers.dev URL. Attach `dcai.larehq.com` to the Worker in the Cloudflare dashboard, or uncomment the `routes` entry in `site/wrangler.jsonc` once the `larehq.com` zone is on the same account, then deploy again.
+
+`site/public/config.js` is where “Add to Chrome” points. `chromeWebStoreUrl` currently opens the install instructions in this repository. When the extension is listed, replace it with the Chrome Web Store URL.
+
+Fonts on the site are self-hosted (Newsreader, Plus Jakarta Sans, and IBM Plex Mono) under the SIL Open Font License. The license texts are in `site/public/fonts/`.

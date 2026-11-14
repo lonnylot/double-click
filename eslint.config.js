@@ -25,12 +25,28 @@ module.exports = [
     },
   },
   {
-    files: ['helper/**/*.js', 'install.js', 'scripts/**/*.js', 'eslint.config.js'],
+    files: ['helper/**/*.js', 'install.js', 'scripts/**/*.js', 'eslint.config.js', 'site/test/**/*.js', 'site/scripts/**/*.js'],
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: 'commonjs',
       globals: {
         ...globals.node,
+      },
+    },
+    rules: {
+      eqeqeq: ['error', 'always'],
+      'no-undef': 'error',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
+      'no-console': ['error', { allow: ['error', 'warn'] }],
+    },
+  },
+  {
+    files: ['site/public/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'script',
+      globals: {
+        ...globals.browser,
       },
     },
     rules: {
