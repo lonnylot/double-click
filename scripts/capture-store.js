@@ -13,7 +13,7 @@ const { stableNodePath } = require('../helper/install');
 const { pngSize, toOpaquePng } = require('./png');
 
 const repo = path.resolve(__dirname, '..');
-const extensionDir = path.join(repo, 'extension');
+const extensionDir = path.join(repo, 'dist', 'extension');
 const outDir = path.join(repo, 'store', 'screenshots');
 const article = fs.readFileSync(path.join(repo, 'demo', 'article.html'), 'utf8').replace(
   '</head>',
@@ -41,7 +41,7 @@ function installHost(profile) {
   fs.mkdirSync(home, { recursive: true });
   const launchPath = path.join(profile, 'double-click-host');
   const nodePath = stableNodePath(process.execPath);
-  const hostJs = path.join(repo, 'helper', 'host.js');
+  const hostJs = path.join(repo, 'dist', 'helper', 'host.js');
   const source = [
     '#!/bin/sh',
     'export DOUBLE_CLICK_HOME=' + shQuote(home),

@@ -10,7 +10,7 @@ const path = require('path');
 const puppeteer = require('puppeteer-core');
 
 const repo = path.resolve(__dirname, '..');
-const extensionDir = path.join(repo, 'extension');
+const extensionDir = path.join(repo, 'dist', 'extension');
 const article = fs.readFileSync(path.join(repo, 'demo', 'article.html'));
 const outDir = process.env.DOUBLE_CLICK_SHOTS || '/opt/cursor/artifacts';
 
@@ -37,7 +37,7 @@ async function main() {
     'com.lare.doubleclick.json',
   );
   if (!fs.existsSync(installedManifest)) {
-    throw new Error('Run node install.js before capturing screenshots.');
+    throw new Error('Run npm run build and node install.js before capturing screenshots.');
   }
   fs.copyFileSync(installedManifest, path.join(hostDir, 'com.lare.doubleclick.json'));
   const server = await serve();
