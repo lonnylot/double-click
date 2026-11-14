@@ -11,8 +11,11 @@ require(path.join(__dirname, '..', '..', 'extension', 'lib', 'chunking.js'));
 const { Reassembler } = globalThis.DoubleClickChunks;
 const { EXPECTED_EXTENSION_ID } = require('../src/constants');
 
+const { originAllowed } = require('../host');
+
 const HOST = path.join(__dirname, '..', 'host.js');
 const ORIGIN = 'chrome-extension://' + EXPECTED_EXTENSION_ID + '/';
+const STORE_ID = 'abcdefghijklmnopabcdefghijklmnop';
 
 function frame(message) {
   const body = Buffer.from(JSON.stringify(message));
@@ -58,14 +61,41 @@ function waitFor(messages, predicate, timeoutMs = 8000) {
 }
 
 test('the host rejects a different extension origin', async () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'dc-host-deny-'));
   const proc = spawn(process.execPath, [HOST, 'chrome-extension://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/'], {
     stdio: ['pipe', 'pipe', 'pipe'],
+    env: { ...process.env, DOUBLE_CLICK_HOME: home },
   });
   const messages = collect(proc);
   const code = await new Promise((resolve) => proc.on('exit', resolve));
   assert.equal(code, 1);
   assert.equal(messages[0].type, 'error');
   assert.match(messages[0].message, /Double Click/);
+});
+
+test('originAllowed accepts the dev id and each configured store id', () => {
+  const ids = [EXPECTED_EXTENSION_ID, STORE_ID];
+  assert.equal(originAllowed(ORIGIN, ids), true);
+  assert.equal(originAllowed('chrome-extension://' + STORE_ID, ids), true);
+  assert.equal(originAllowed('chrome-extension://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/', ids), false);
+  assert.equal(originAllowed('https://dcai.larehq.com', ids), false);
+});
+
+test('the host accepts a store id recorded by the installer', async () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'dc-host-store-'));
+  fs.writeFileSync(path.join(home, 'host-config.json'), JSON.stringify({
+    extensionIds: [EXPECTED_EXTENSION_ID, STORE_ID],
+  }));
+  const proc = spawn(process.execPath, [HOST, 'chrome-extension://' + STORE_ID + '/'], {
+    stdio: ['pipe', 'pipe', 'pipe'],
+    env: { ...process.env, DOUBLE_CLICK_HOME: home, DOUBLE_CLICK_MOCK_DELAY: '0' },
+  });
+  const messages = collect(proc);
+  proc.stdin.write(frame({ type: 'ping' }));
+  const pong = await waitFor(messages, (message) => message.type === 'pong');
+  assert.equal(pong.type, 'pong');
+  proc.kill();
+  await new Promise((resolve) => proc.on('exit', resolve));
 });
 
 test('mock provider and chunked echo work through native framing', async () => {

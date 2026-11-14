@@ -59,7 +59,16 @@ You need Node.js 18 or newer, and Google Chrome.
 
 5. Highlight text on a normal web page and click Ask. Choose a provider in the popup. Open history from the toolbar icon, or from the menu button in the chat.
 
-The helper speaks only to `chrome-extension://dkaimfjbcdiaeialfejfhppmlmcafabc/`. It is started by Chrome over native messaging. There is no listening port.
+The helper speaks only to the unpacked extension `chrome-extension://dkaimfjbcdiaeialfejfhppmlmcafabc/` and any Chrome Web Store id you add. It is started by Chrome over native messaging. There is no listening port.
+
+The unpacked id is always allowed. After the Chrome Web Store assigns an id, add it to `STORE_EXTENSION_IDS` in `helper/src/constants.js` and run `node install.js` again. You can also pass ids without editing that file. Repeat the flag, or separate ids with commas:
+
+```bash
+node install.js --extension-id <store-id>
+node install.js --extension-id <id-one>,<id-two>
+```
+
+Restart Chrome after registering the host so it relaunches the helper.
 
 Binaries are invoked by name: `grok`, `cursor-agent`, `codex`, `copilot`, `agy`, `claude`. The helper looks them up on your login shell’s PATH, plus the usual install directories (`~/.local/bin`, `~/.grok/bin`, Homebrew, npm, nvm, Volta, fnm, asdf), because Chrome’s own PATH is only `/usr/bin:/bin:/usr/sbin:/sbin` when it is launched from the Dock. The generic `agent` command is never used, because Grok and Cursor have both shipped it. The Providers section of history shows the path that will run, and you can set an absolute path for one tool there.
 
@@ -75,7 +84,10 @@ Flag and event details that were checked against current docs are noted at the t
 npm install
 npm test
 npm run lint
+npm run package
 ```
+
+`npm run package` writes `dist/double-click-ai-<version>.zip` containing only the files in `extension/`. The zip manifest omits `key`, which the Chrome Web Store rejects. The key stays in `extension/manifest.json` so an unpacked install keeps the id `dkaimfjbcdiaeialfejfhppmlmcafabc`. See `store/SUBMITTING.md` for the upload checklist.
 
 Tests cover adapter parsers against fixture streams, argument shape (including the Claude and Cursor constraints), session-id storage, environment stripping, message chunking, the installer paths for macOS, Linux, and Windows, a fake Codex process, and the mock provider through the real native-messaging frames.
 
@@ -83,14 +95,14 @@ Tests cover adapter parsers against fixture streams, argument shape (including t
 
 ## Site
 
-The landing page is a static site in `site/` for [dcai.larehq.com](https://dcai.larehq.com). It deploys as a Cloudflare Worker with static assets and no Worker script. The Worker name is `dcai-site`. `site/wrangler.jsonc` serves `site/public`, uses `404.html` for unknown paths, and leaves the custom domain commented out.
+The landing page is a static site in `site/` for [dcai.larehq.com](https://dcai.larehq.com). It deploys as a Cloudflare Worker with static assets and no Worker script. The Worker name is `dcai-site`. `site/wrangler.jsonc` serves `site/public`, uses `404.html` for unknown paths, and keeps `dcai.larehq.com` attached with a Workers custom domain route.
 
 ```bash
 cd site
 npx wrangler deploy
 ```
 
-Wrangler prints a workers.dev URL. Attach `dcai.larehq.com` to the Worker in the Cloudflare dashboard, or uncomment the `routes` entry in `site/wrangler.jsonc` once the `larehq.com` zone is on the same account, then deploy again.
+The site is already live at [dcai.larehq.com](https://dcai.larehq.com). `npx wrangler deploy` from `site/` publishes the assets and keeps that custom domain because `routes` is set in `site/wrangler.jsonc`.
 
 `site/public/config.js` is where “Add to Chrome” points. `chromeWebStoreUrl` currently opens the install instructions in this repository. When the extension is listed, replace it with the Chrome Web Store URL.
 

@@ -7,10 +7,13 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test \"helper/test/**/*.test.js\" \"site/test/**/*.test.js\"",
+    "test": "node --test \"helper/test/**/*.test.js\" \"site/test/**/*.test.js\" \"scripts/**/*.test.js\"",
     "lint": "eslint .",
     "install-host": "node install.js",
-    "capture": "node scripts/capture.js"
+    "package": "node scripts/package-extension.js",
+    "capture": "node scripts/capture.js",
+    "capture:store": "node scripts/capture-store.js",
+    "render:store": "node scripts/render-store-promo.js"
   },
   "devDependencies": {
     "eslint": "^9.39.1",
