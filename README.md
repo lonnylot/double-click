@@ -34,19 +34,28 @@ If a CLI is missing or not signed in, the chat shows the install or login comman
 
 ## Install
 
-You need Node.js 18 or newer, and Google Chrome.
+You need Node.js 18 or newer, and Google Chrome. The helper Chrome launches is compiled JavaScript, so that Node does not need to understand TypeScript.
 
-1. Load the extension unpacked. Open `chrome://extensions`, turn on Developer mode, choose Load unpacked, and select the `extension` folder in this repo.
-2. Confirm the extension id is `dkaimfjbcdiaeialfejfhppmlmcafabc`. The id is pinned with the public `key` in `extension/manifest.json`, so an unpacked install matches the native host allowlist. That key is an extension identity, not a secret.
-3. From this folder, register the local helper:
+1. Install dependencies and build. From this folder:
+
+   ```bash
+   npm install
+   npm run build
+   ```
+
+   `npm run build` typechecks and compiles the extension with esbuild into `dist/extension`, and compiles the helper with `tsc` into `dist/helper`. The dev build keeps the manifest `key`.
+
+2. Load the extension unpacked. Open `chrome://extensions`, turn on Developer mode, choose Load unpacked, and select the `dist/extension` folder (not the TypeScript sources in `extension/`).
+3. Confirm the extension id is `dkaimfjbcdiaeialfejfhppmlmcafabc`. The id is pinned with the public `key` in `extension/manifest.json`, which the dev build copies through, so an unpacked install matches the native host allowlist. That key is an extension identity, not a secret.
+4. From this folder, register the local helper:
 
    ```bash
    node install.js
    ```
 
-   The installer writes a Chrome native-messaging host for Chrome, Chromium, Edge, and Brave on macOS and Linux, and the HKCU registry entries plus a `.cmd` launcher on Windows. It records the absolute path to this repo’s `helper/host.js` and a stable path to Node: the Homebrew `opt` symlink (for example `/opt/homebrew/opt/node@24/bin/node`) when Node is a versioned Cellar build, otherwise the `command -v node` entry without resolving that symlink. Run `node install.js` again after you pull updates, move the repo, or upgrade Node, then restart Chrome so it relaunches the helper. `node install.js --uninstall` removes the registration.
+   The installer writes a Chrome native-messaging host for Chrome, Chromium, Edge, and Brave on macOS and Linux, and the HKCU registry entries plus a `.cmd` launcher on Windows. It records the absolute path to the compiled host `dist/helper/host.js` and a stable path to Node: the Homebrew `opt` symlink (for example `/opt/homebrew/opt/node@24/bin/node`) when Node is a versioned Cellar build, otherwise the `command -v node` entry without resolving that symlink. Run `npm run build` and then `node install.js` again after you pull updates, move the repo, or upgrade Node, then restart Chrome so it relaunches the helper. `node install.js --uninstall` removes the registration.
 
-4. Sign in to the CLIs you want to use, in a terminal:
+5. Sign in to the CLIs you want to use, in a terminal:
 
    ```bash
    npm install -g @openai/codex && codex login
@@ -57,11 +66,11 @@ You need Node.js 18 or newer, and Google Chrome.
    npm install -g @anthropic-ai/claude-code && claude auth login
    ```
 
-5. Highlight text on a normal web page and click Ask. Choose a provider in the popup. Open history from the toolbar icon, or from the menu button in the chat.
+6. Highlight text on a normal web page and click Ask. Choose a provider in the popup. Open history from the toolbar icon, or from the menu button in the chat.
 
 The helper speaks only to the unpacked extension `chrome-extension://dkaimfjbcdiaeialfejfhppmlmcafabc/` and any Chrome Web Store id you add. It is started by Chrome over native messaging. There is no listening port.
 
-The unpacked id is always allowed. After the Chrome Web Store assigns an id, add it to `STORE_EXTENSION_IDS` in `helper/src/constants.js` and run `node install.js` again. You can also pass ids without editing that file. Repeat the flag, or separate ids with commas:
+The unpacked id is always allowed. After the Chrome Web Store assigns an id, add it to `STORE_EXTENSION_IDS` in `helper/src/constants.ts` and run `npm run build` and `node install.js` again. You can also pass ids without editing that file. Repeat the flag, or separate ids with commas:
 
 ```bash
 node install.js --extension-id <store-id>
@@ -82,16 +91,18 @@ Flag and event details that were checked against current docs are noted at the t
 
 ```bash
 npm install
+npm run build
 npm test
 npm run lint
+npm run typecheck
 npm run package
 ```
 
-`npm run package` writes `dist/double-click-ai-<version>.zip` containing only the files in `extension/`. The zip manifest omits `key`, which the Chrome Web Store rejects. The key stays in `extension/manifest.json` so an unpacked install keeps the id `dkaimfjbcdiaeialfejfhppmlmcafabc`. See `store/SUBMITTING.md` for the upload checklist.
+`npm test` builds first. `npm run typecheck` is `tsc --noEmit` with `strict` for the extension and the helper. `npm run package` writes `dist/double-click-ai-<version>.zip` from the compiled `dist/extension` folder. The zip manifest omits `key`, which the Chrome Web Store rejects. The key stays in `extension/manifest.json` and in the unpacked `dist/extension` build, so a dev install keeps the id `dkaimfjbcdiaeialfejfhppmlmcafabc`. See `store/SUBMITTING.md` for the upload checklist.
 
 Tests cover adapter parsers against fixture streams, argument shape (including the Claude and Cursor constraints), session-id storage, environment stripping, message chunking, the installer paths for macOS, Linux, and Windows, a fake Codex process, and the mock provider through the real native-messaging frames.
 
-`npm run capture` loads the unpacked extension in headless Chrome, asks the sample provider about `demo/article.html`, and writes popup and history screenshots. Run `node install.js` first so Chrome can start the helper. Branded Chrome ignores `--load-extension`; point `CHROME_PATH` at Chrome for Testing when you need that flag.
+`npm run capture` loads the unpacked build in headless Chrome, asks the sample provider about `demo/article.html`, and writes popup and history screenshots. Run `npm run build` and `node install.js` first so Chrome can start the helper. Branded Chrome ignores `--load-extension`; point `CHROME_PATH` at Chrome for Testing when you need that flag.
 
 ## Site
 
@@ -107,3 +118,7 @@ The site is already live at [dcai.larehq.com](https://dcai.larehq.com). `npx wra
 `site/public/config.js` is where “Add to Chrome” points. `chromeWebStoreUrl` currently opens the install instructions in this repository. When the extension is listed, replace it with the Chrome Web Store URL.
 
 Fonts on the site are self-hosted (Newsreader, Plus Jakarta Sans, and IBM Plex Mono) under the SIL Open Font License. The license texts are in `site/public/fonts/`.
+
+## License
+
+MIT. Copyright (c) 2026 LARE, LLC. See [LICENSE](LICENSE).

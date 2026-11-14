@@ -1,5 +1,12 @@
 node_modules/
 dist/
+extension/background.js
+extension/history.js
+extension/content/content.js
+extension/lib/*.js
+helper/**/*.js
+shared/**/*.js
+*.tsbuildinfo
 .double-click/
 *.log
 .DS_Store

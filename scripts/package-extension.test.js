@@ -32,6 +32,11 @@ test('the store zip is extension files only and its manifest has no key', () => 
   assert.equal(names.some((name) => name.startsWith('helper/') || name.startsWith('store/') || name.includes('..')), false);
   assert.equal(result.fileCount, names.length);
 
+  const devManifest = JSON.parse(fs.readFileSync(path.join(repo, 'dist', 'extension', 'manifest.json'), 'utf8'));
+  assert.equal(devManifest.key, KEY);
+  assert.ok(names.includes('content/content.js'));
+  assert.equal(names.some((name) => name.endsWith('.ts')), false);
+
   const manifestEntry = packed.find((file) => file.name === 'manifest.json');
   const manifest = JSON.parse(manifestEntry.body.toString('utf8'));
   assert.equal(Object.hasOwn(manifest, 'key'), false);

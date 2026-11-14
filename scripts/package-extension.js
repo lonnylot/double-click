@@ -36,8 +36,9 @@ function storeManifest(sourceText) {
 
 function packageExtension(options = {}) {
   const repoRoot = options.repoRoot || path.resolve(__dirname, '..');
-  const extensionDir = path.join(repoRoot, 'extension');
-  const sourceManifest = fs.readFileSync(path.join(extensionDir, 'manifest.json'), 'utf8');
+  if (!options.skipBuild) require('./build').build();
+  const extensionDir = path.join(repoRoot, 'dist', 'extension');
+  const sourceManifest = fs.readFileSync(path.join(repoRoot, 'extension', 'manifest.json'), 'utf8');
   const manifestText = storeManifest(sourceManifest);
   const parsed = JSON.parse(manifestText);
   const version = parsed.version || '0.0.0';
@@ -60,8 +61,10 @@ function main() {
   const result = packageExtension();
   const after = fs.readFileSync(path.join(__dirname, '..', 'extension', 'manifest.json'), 'utf8');
   if (before !== after) throw new Error('packaging changed extension/manifest.json');
+  const devManifest = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'dist', 'extension', 'manifest.json'), 'utf8'));
+  if (!devManifest.key) throw new Error('the dev build lost its key');
   process.stdout.write('Wrote ' + result.outPath + ' (' + result.fileCount + ' files, version ' + result.version + ')\n');
-  process.stdout.write('The zip manifest has no key. extension/manifest.json in the repo still has its key.\n');
+  process.stdout.write('The zip manifest has no key. The dev build and extension/manifest.json still have the key.\n');
 }
 
 if (require.main === module) {

@@ -2,12 +2,15 @@
   "name": "double-click-ai",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "Double Click AI highlights a passage and asks about it with the AI CLIs you already use. A LARE, LLC product.",
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test \"helper/test/**/*.test.js\" \"site/test/**/*.test.js\" \"scripts/**/*.test.js\"",
+    "build": "node scripts/build.js",
+    "typecheck": "tsc -p tsconfig.helper.json --noEmit && tsc -p tsconfig.extension.json --noEmit && tsc -p tsconfig.tests.json --noEmit",
+    "test": "npm run build && node --test --test-concurrency=1 \"helper/test/**/*.test.ts\" \"site/test/**/*.test.js\" \"scripts/**/*.test.js\"",
     "lint": "eslint .",
     "install-host": "node install.js",
     "package": "node scripts/package-extension.js",
@@ -16,8 +19,13 @@
     "render:store": "node scripts/render-store-promo.js"
   },
   "devDependencies": {
+    "@types/chrome": "^0.1.31",
+    "@types/node": "^24.10.1",
+    "esbuild": "^0.25.11",
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
-    "puppeteer-core": "^24.30.0"
+    "puppeteer-core": "^24.30.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.48.0"
   }
 }
