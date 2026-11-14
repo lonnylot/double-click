@@ -5,7 +5,7 @@ const os = require('os');
 const path = require('path');
 const { spawn } = require('child_process');
 const { stripEnv } = require('./env');
-const { which } = require('./which');
+const { resolveCommand } = require('./which');
 const { createState } = require('./parse-util');
 const { getAdapter } = require('./providers');
 const { TURN_TIMEOUT_MS } = require('./constants');
@@ -77,7 +77,7 @@ async function runMock(adapter, turn, spec, emit, signal) {
 
 async function runTurn(turn, options) {
   const spawnImpl = (options && options.spawn) || spawn;
-  const whichImpl = (options && options.which) || which;
+  const whichImpl = (options && options.which) || resolveCommand;
   const env = (options && options.env) || process.env;
   const sessions = options && options.sessions;
   const onEvent = options.onEvent;
@@ -147,7 +147,7 @@ async function runTurn(turn, options) {
       emit({ kind: 'error', code: 'refused', message: 'Refusing an unsafe CLI flag.', hint: '' });
       return;
     }
-    const binary = whichImpl(spec.command, env);
+    const binary = whichImpl(spec.command, env, turn.providerPath);
     if (!binary) {
       emit({
         kind: 'error',

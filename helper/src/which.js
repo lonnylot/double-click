@@ -16,6 +16,15 @@ function extensions(env) {
   return list;
 }
 
+function commandStem(bin) {
+  return path.basename(String(bin || '')).toLowerCase().replace(/\.(exe|cmd|bat|com)$/i, '');
+}
+
+// Grok and Cursor have both shipped a generic `agent` binary. Never run it.
+function isGenericAgent(bin) {
+  return commandStem(bin) === 'agent';
+}
+
 function isExecutable(file) {
   try {
     const stat = fs.statSync(file);
@@ -31,7 +40,7 @@ function isExecutable(file) {
 // Look up a specific binary name on PATH. Never resolves the generic name "agent".
 function which(bin, env) {
   const base = path.basename(String(bin || ''));
-  const stem = base.toLowerCase().replace(/\.(exe|cmd|bat|com)$/i, '');
+  const stem = commandStem(base);
   if (!stem || stem === 'agent') return null;
   if (base !== bin || base.includes('/') || base.includes('\\')) return null;
   const envExts = extensions(env);
@@ -44,4 +53,27 @@ function which(bin, env) {
   return null;
 }
 
-module.exports = { which };
+function classifyOverride(override) {
+  const candidate = String(override || '').trim();
+  if (!candidate) return { path: null, note: '' };
+  if (!path.isAbsolute(candidate)) return { path: null, note: 'Use an absolute path.' };
+  if (isGenericAgent(candidate)) return { path: null, note: 'The generic agent command is not used.' };
+  if (!isExecutable(candidate)) return { path: null, note: 'That file is not executable.' };
+  return { path: candidate, note: '' };
+}
+
+// Absolute override wins when it is usable. An unusable override does not fall back to PATH.
+function resolveCommand(command, env, override) {
+  const custom = String(override || '').trim();
+  if (custom) return classifyOverride(custom).path;
+  if (isGenericAgent(command)) return null;
+  return which(command, env);
+}
+
+module.exports = {
+  which,
+  isExecutable,
+  isGenericAgent,
+  classifyOverride,
+  resolveCommand,
+};

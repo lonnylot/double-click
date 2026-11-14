@@ -57,6 +57,7 @@ globalThis.DoubleClickStyles = `
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.35);
   overflow: hidden;
 }
+.dc-panel[hidden] { display: none !important; }
 .dc-panel.dc-in { animation: dc-in 140ms ease-out; }
 @keyframes dc-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .dc-panel.dc-in { animation: none; } }
@@ -64,13 +65,18 @@ globalThis.DoubleClickStyles = `
   display: flex;
   align-items: center;
   gap: 8px;
+  flex: none;
+  position: relative;
+  z-index: 2;
   padding: 10px 10px 8px 12px;
   border-bottom: 1px solid rgba(243, 230, 208, 0.1);
 }
 .dc-brand { display: flex; align-items: center; gap: 8px; font-weight: 650; font-size: 13px; letter-spacing: 0.01em; }
 .dc-select {
   margin-left: auto;
-  max-width: 150px;
+  min-width: 0;
+  width: 150px;
+  max-width: 42%;
   appearance: none;
   background: #221c16 url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M1 1l4 4 4-4' stroke='%23b7ab9c' fill='none'/></svg>") right 8px center no-repeat;
   color: #f4efe6;
@@ -82,6 +88,7 @@ globalThis.DoubleClickStyles = `
 .dc-icon {
   width: 28px;
   height: 28px;
+  flex: none;
   border: 0;
   border-radius: 8px;
   background: transparent;

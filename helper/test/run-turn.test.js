@@ -128,3 +128,49 @@ printf '%s\\n' '{"type":"turn.completed"}'
   assert.equal(fs.existsSync(path.join(cwd, '.git')), false);
   assert.match(fs.readFileSync(stdinFile, 'utf8'), /Salt on the window/);
 });
+
+test('a custom provider path is used and the generic agent binary is refused', async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dc-override-'));
+  const custom = path.join(dir, 'elsewhere', 'grok');
+  const agent = path.join(dir, 'grok-bin', 'agent');
+  const stamp = path.join(dir, 'ran');
+  fs.mkdirSync(path.dirname(custom), { recursive: true });
+  fs.mkdirSync(path.dirname(agent), { recursive: true });
+  fs.writeFileSync(custom, `#!/bin/sh
+touch "${stamp}"
+printf '%s\\n' '{"type":"text","data":"from-custom"}'
+printf '%s\\n' '{"type":"end","sessionId":"s-custom"}'
+`, { mode: 0o755 });
+  fs.writeFileSync(agent, `#!/bin/sh\ntouch "${stamp}"\n`, { mode: 0o755 });
+  fs.chmodSync(custom, 0o755);
+  fs.chmodSync(agent, 0o755);
+
+  const events = [];
+  await runTurn({
+    provider: 'grok',
+    conversationId: 'c-custom',
+    userText: 'Hello',
+    selection: { text: 'Passage', title: 'T', url: 'https://example.com' },
+    providerPath: custom,
+  }, {
+    env: { PATH: '/usr/bin:/bin:/usr/sbin:/sbin', HOME: dir },
+    onEvent: (event) => events.push(event),
+  });
+  assert.equal(events.find((event) => event.kind === 'done').text, 'from-custom');
+  assert.equal(fs.existsSync(stamp), true);
+  fs.rmSync(stamp);
+
+  const refused = [];
+  await runTurn({
+    provider: 'grok',
+    conversationId: 'c-agent',
+    userText: 'Hello',
+    selection: { text: 'Passage', title: 'T', url: 'https://example.com' },
+    providerPath: agent,
+  }, {
+    env: { PATH: '/usr/bin:/bin:/usr/sbin:/sbin', HOME: dir },
+    onEvent: (event) => refused.push(event),
+  });
+  assert.equal(refused.find((event) => event.kind === 'error').code, 'not_installed');
+  assert.equal(fs.existsSync(stamp), false);
+});

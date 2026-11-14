@@ -348,13 +348,17 @@ if (!globalThis.__doubleClickInstalled) {
   }
 
   function closePanel() {
-    if (ui.streaming && ui.port && ui.requestId) {
-      ui.port.postMessage({ type: 'cancel', requestId: ui.requestId });
-    }
+    const port = ui.port;
+    const requestId = ui.requestId;
+    const shouldCancel = Boolean(ui.streaming && port && requestId);
     ui.open = false;
     ui.streaming = false;
     panel.hidden = true;
     host.dataset.open = '0';
+    if (!shouldCancel) return;
+    try {
+      port.postMessage({ type: 'cancel', requestId });
+    } catch (_err) { /* a disconnected port must not keep the popup on screen */ }
   }
 
   function submitQuestion() {
@@ -401,7 +405,11 @@ if (!globalThis.__doubleClickInstalled) {
     paintCaveat();
   });
   historyButton.addEventListener('click', () => ensurePort().postMessage({ type: 'open-history' }));
-  closeButton.addEventListener('click', closePanel);
+  closeButton.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    closePanel();
+  });
   input.addEventListener('input', () => {
     input.style.height = 'auto';
     input.style.height = Math.min(input.scrollHeight, 120) + 'px';
@@ -420,13 +428,14 @@ if (!globalThis.__doubleClickInstalled) {
     event.stopPropagation();
     openPanel();
   });
+  window.addEventListener('keydown', (event) => {
+    if (!ui.open || event.key !== 'Escape') return;
+    event.preventDefault();
+    event.stopPropagation();
+    closePanel();
+  }, true);
   panel.addEventListener('keydown', (event) => {
     event.stopPropagation();
-    if (event.key === 'Escape') {
-      event.preventDefault();
-      closePanel();
-      return;
-    }
     if (event.key === 'Enter' && !event.shiftKey && event.target === input && !event.isComposing) {
       event.preventDefault();
       submitQuestion();
