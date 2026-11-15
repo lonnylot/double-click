@@ -1,7 +1,7 @@
 # Chrome Web Store listing
 
 Publisher: LARE, LLC
-Developer account: lonny@larehq.com
+Developer account: lonny@lonnylot.com
 Privacy policy: https://dcai.larehq.com/privacy
 
 Paste each section below into the matching dashboard field. The description is plain text.
@@ -18,26 +18,17 @@ Highlight a passage and ask about it in place, using the AI tools you already si
 
 Double Click AI lets you highlight a passage on a web page and ask about it without leaving the page. The conversation stays attached to that passage. Follow-up questions continue the same thread, and replies render as formatted text.
 
-Answers come from the AI command-line tools you already sign in to on this computer. Double Click AI does not sell model access and does not ask for an API key. It starts the tool you pick:
+Answers come from an AI command-line tool you already sign in to on this computer, so you use the plan you already have. Double Click AI does not sell model access and does not ask for an API key. You pick the tool in settings, and the list of supported tools is at https://dcai.larehq.com
 
-- Codex, with a ChatGPT sign-in
-- GitHub Copilot
-- Antigravity
-- Grok
-- Cursor
-- Claude Code, which stays off until you turn it on
-
-Claude's terms do not allow third-party products to route requests through Claude plan credentials. If you enable Claude Code, Double Click AI only starts the Claude Code program already installed on your computer. It does not read Claude login files.
-
-A Sample reply provider is included so you can try the popup before any of those tools is installed. That sample stays on this computer.
+A sample reply mode is included so you can try the popup before any tool is installed. It stays on this computer.
 
 The toolbar icon opens a history of the pages, highlights, and conversations stored in this browser. You can search them, reopen one, or delete a conversation or a whole page.
 
-Double Click AI needs a one-time local helper install. The helper is not inside the extension package. Chrome starts it on your computer so a turn can reach the tool you picked. There is no listening port. You need Node.js 18 or newer. Follow the Install steps in the README:
+Double Click AI needs a one-time local helper install. The helper is not inside the extension package. Chrome starts it on your computer so a question can reach the tool you picked. There is no listening port. You need Node.js 18 or newer. Follow the Install steps in the README:
 
 https://github.com/lonnylot/double-click#install
 
-Highlights and questions go only to the provider you pick, through that provider's own program. History stays in this browser. There is no Double Click AI account, and LARE, LLC does not run a server that receives your chats. The privacy policy is at https://dcai.larehq.com/privacy
+Highlights and questions go only to the tool you pick, through that tool's own program. History stays in this browser. There is no Double Click AI account, and LARE, LLC does not run a server that receives your chats. The privacy policy is at https://dcai.larehq.com/privacy
 
 A LARE, LLC product.
 
