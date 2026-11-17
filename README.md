@@ -68,9 +68,9 @@ You need Node.js 18 or newer, and Google Chrome. The helper Chrome launches is c
 
 6. Highlight text on a normal web page and click Ask. Choose a provider in the popup. Open history from the toolbar icon, or from the menu button in the chat.
 
-The helper speaks only to the unpacked extension `chrome-extension://dkaimfjbcdiaeialfejfhppmlmcafabc/` and any Chrome Web Store id you add. It is started by Chrome over native messaging. There is no listening port.
+The helper speaks only to the unpacked extension `chrome-extension://dkaimfjbcdiaeialfejfhppmlmcafabc/` and the Chrome Web Store extension `chrome-extension://pbfbpkklipcgellnogpboeeplljimkfm/`. It is started by Chrome over native messaging. There is no listening port.
 
-The unpacked id is always allowed. After the Chrome Web Store assigns an id, add it to `STORE_EXTENSION_IDS` in `helper/src/constants.ts` and run `npm run build` and `node install.js` again. You can also pass ids without editing that file. Repeat the flag, or separate ids with commas:
+The unpacked id is always allowed. The published store id is in `STORE_EXTENSION_IDS` in `helper/src/constants.ts`. `node install.js` writes both into the native host manifest's `allowed_origins`. After you add another id there, run `npm run build` and `node install.js` again. You can also pass ids without editing that file. Repeat the flag, or separate ids with commas:
 
 ```bash
 node install.js --extension-id <store-id>
@@ -115,7 +115,7 @@ npx wrangler deploy
 
 The site is already live at [dcai.larehq.com](https://dcai.larehq.com). `npx wrangler deploy` from `site/` publishes the assets and keeps that custom domain because `routes` is set in `site/wrangler.jsonc`.
 
-`site/public/config.js` is where “Add to Chrome” points. `chromeWebStoreUrl` currently opens the install instructions in this repository. When the extension is listed, replace it with the Chrome Web Store URL.
+`site/public/config.js` is where “Add to Chrome” points. `chromeWebStoreUrl` is the public listing, [Double Click AI on the Chrome Web Store](https://chromewebstore.google.com/detail/double-click-ai/pbfbpkklipcgellnogpboeeplljimkfm).
 
 Fonts on the site are self-hosted (Newsreader, Plus Jakarta Sans, and IBM Plex Mono) under the SIL Open Font License. The license texts are in `site/public/fonts/`.
 

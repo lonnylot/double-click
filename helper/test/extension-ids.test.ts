@@ -13,17 +13,22 @@ const { HOST_NAME } = require('../src/constants');
 
 const STORE_A = 'abcdefghijklmnopabcdefghijklmnop';
 const STORE_B = 'bbcdefghijklmnopabcdefghijklmnop';
+const PUBLISHED_STORE_ID = 'pbfbpkklipcgellnogpboeeplljimkfm';
 
-test('the store id list starts empty and the dev id stays first', () => {
-  assert.deepEqual(STORE_EXTENSION_IDS, []);
-  assert.deepEqual(configuredExtensionIds(), [EXPECTED_EXTENSION_ID]);
+test('the published store id is allowlisted and the dev id stays first', () => {
+  assert.deepEqual(STORE_EXTENSION_IDS, [PUBLISHED_STORE_ID]);
+  assert.deepEqual(configuredExtensionIds(), [EXPECTED_EXTENSION_ID, PUBLISHED_STORE_ID]);
   assert.deepEqual(
     configuredExtensionIds([STORE_A, EXPECTED_EXTENSION_ID, STORE_A], [STORE_A, STORE_B]),
     [EXPECTED_EXTENSION_ID, STORE_A, STORE_B],
   );
-  assert.deepEqual(originsForExtensionIds([EXPECTED_EXTENSION_ID, STORE_A]), [
+  assert.deepEqual(
+    configuredExtensionIds([PUBLISHED_STORE_ID, STORE_A]),
+    [EXPECTED_EXTENSION_ID, PUBLISHED_STORE_ID, STORE_A],
+  );
+  assert.deepEqual(originsForExtensionIds([EXPECTED_EXTENSION_ID, PUBLISHED_STORE_ID]), [
     'chrome-extension://' + EXPECTED_EXTENSION_ID + '/',
-    'chrome-extension://' + STORE_A + '/',
+    'chrome-extension://' + PUBLISHED_STORE_ID + '/',
   ]);
 });
 
@@ -48,13 +53,14 @@ test('the native host manifest allowlist can hold the dev id and store ids', () 
     launchPath: '/opt/double-click/double-click-host',
     manifestPath: '/home/ada/.double-click/com.lare.doubleclick.json',
   });
-  assert.deepEqual(plan.extensionIds, [EXPECTED_EXTENSION_ID, STORE_A, STORE_B]);
+  assert.deepEqual(plan.extensionIds, [EXPECTED_EXTENSION_ID, PUBLISHED_STORE_ID, STORE_A, STORE_B]);
   assert.deepEqual(plan.hostManifest.allowed_origins, [
     'chrome-extension://' + EXPECTED_EXTENSION_ID + '/',
+    'chrome-extension://' + PUBLISHED_STORE_ID + '/',
     'chrome-extension://' + STORE_A + '/',
     'chrome-extension://' + STORE_B + '/',
   ]);
-  assert.ok(plan.files.every((file) => file.body.allowed_origins.length === 3));
+  assert.ok(plan.files.every((file) => file.body.allowed_origins.length === 4));
   assert.ok(plan.files.some((file) => file.path.endsWith('NativeMessagingHosts/' + HOST_NAME + '.json')));
 
   const single = installPlan({
@@ -67,10 +73,23 @@ test('the native host manifest allowlist can hold the dev id and store ids', () 
   assert.deepEqual(single.hostManifest.allowed_origins, ['chrome-extension://' + EXPECTED_EXTENSION_ID + '/']);
 });
 
-test('a dry-run install keeps the dev id and every flag id', () => {
-  const plan = main(['--dry-run', '--extension-id', STORE_A, '--extension-id', STORE_B + ',' + STORE_A]);
-  assert.deepEqual(plan.extensionIds, [EXPECTED_EXTENSION_ID, STORE_A, STORE_B]);
+test('a dry-run install allowlists the unpacked id and the published store id', () => {
+  const plan = main(['--dry-run']);
+  assert.deepEqual(plan.extensionIds, [EXPECTED_EXTENSION_ID, PUBLISHED_STORE_ID]);
+  assert.deepEqual(plan.hostManifest.allowed_origins, [
+    'chrome-extension://' + EXPECTED_EXTENSION_ID + '/',
+    'chrome-extension://' + PUBLISHED_STORE_ID + '/',
+  ]);
   assert.equal(plan.hostManifest.name, HOST_NAME);
-  assert.equal(plan.hostManifest.allowed_origins.length, 3);
+  assert.ok(plan.files.every((file) => file.body.allowed_origins.includes(
+    'chrome-extension://' + PUBLISHED_STORE_ID + '/',
+  )));
+});
+
+test('a dry-run install keeps the dev id, the published store id, and every flag id', () => {
+  const plan = main(['--dry-run', '--extension-id', STORE_A, '--extension-id', STORE_B + ',' + STORE_A]);
+  assert.deepEqual(plan.extensionIds, [EXPECTED_EXTENSION_ID, PUBLISHED_STORE_ID, STORE_A, STORE_B]);
+  assert.equal(plan.hostManifest.name, HOST_NAME);
+  assert.equal(plan.hostManifest.allowed_origins.length, 4);
 });
 
