@@ -22,7 +22,7 @@ test('store listing copy is ready to paste and does not claim a live listing', (
   const listing = read('store/listing.md');
   const manifest = JSON.parse(read('extension/manifest.json'));
   assert.match(listing, /LARE, LLC/);
-  assert.match(listing, /lonny@larehq\.com/);
+  assert.match(listing, /lonny@lonnylot\.com/);
   assert.equal(section(listing, 'Name'), 'Double Click AI');
   const summary = section(listing, 'Summary');
   assert.equal(summary, manifest.description);

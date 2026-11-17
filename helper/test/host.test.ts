@@ -8,7 +8,7 @@ const os = require('os');
 const path = require('path');
 
 const { Reassembler } = require('../../shared/chunking');
-const { EXPECTED_EXTENSION_ID } = require('../src/constants');
+const { EXPECTED_EXTENSION_ID, STORE_EXTENSION_IDS } = require('../src/constants');
 
 const { originAllowed } = require('../host');
 
@@ -75,6 +75,9 @@ test('the host rejects a different extension origin', async () => {
 });
 
 test('originAllowed accepts the dev id and each configured store id', () => {
+  const published = 'pbfbpkklipcgellnogpboeeplljimkfm';
+  assert.ok(STORE_EXTENSION_IDS.includes(published));
+  assert.equal(originAllowed('chrome-extension://' + published + '/'), true);
   const ids = [EXPECTED_EXTENSION_ID, STORE_ID];
   assert.equal(originAllowed(ORIGIN, ids), true);
   assert.equal(originAllowed('chrome-extension://' + STORE_ID, ids), true);

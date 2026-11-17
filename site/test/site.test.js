@@ -58,7 +58,7 @@ test('the product name is user-facing and the host id and extension key stay put
   assert.match(read('helper/src/constants.js'), /com\.lare\.doubleclick/);
 });
 
-test('the landing site keeps the approved copy and does not claim a store listing', () => {
+test('the landing site keeps the approved copy and points Add to Chrome at the store', () => {
   const index = read('site/public/index.html');
   assert.equal(index.includes('Listed on the Chrome Web Store'), false);
   assert.equal(index.includes('listed on the Chrome Web Store'), false);
@@ -67,8 +67,8 @@ test('the landing site keeps the approved copy and does not claim a store listin
   assert.match(index, /href="https:\/\/github\.com\/lonnylot\/double-click"/);
   assert.match(index, /data-chrome-cta href="https:\/\/github\.com\/lonnylot\/double-click#install"/);
   const config = read('site/public/config.js');
-  assert.match(config, /TODO:/);
-  assert.match(config, /chromeWebStoreUrl: 'https:\/\/github\.com\/lonnylot\/double-click#install'/);
+  assert.equal(config.includes('TODO:'), false);
+  assert.match(config, /chromeWebStoreUrl: 'https:\/\/chromewebstore\.google\.com\/detail\/double-click-ai\/pbfbpkklipcgellnogpboeeplljimkfm'/);
   assert.match(index, /property="og:image"/);
   assert.match(index, /twitter:card/);
   assert.match(index, /Skip to content/);
